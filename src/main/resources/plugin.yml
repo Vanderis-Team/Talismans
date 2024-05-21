@@ -1,0 +1,4 @@
+name: Talismans
+version: '${version}'
+main: me.adselvn.talismans.Talismans
+api-version: '1.20'
