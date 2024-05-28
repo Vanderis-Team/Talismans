@@ -1,0 +1,35 @@
+title: "&c&lTalismans Bag"
+
+format:
+  - "aaaaaaaaa"
+  - "attttttta"
+  - "attttttta"
+  - "attttttta"
+  - "attttttta"
+  - "aaaaaaaaa"
+
+items:
+  a:
+    material: "GRAY_STAINED_GLASS_PANE"
+    name: "&7Put your talismans into empty slot!"
+  full: # This item is NOT required, you can remove it
+    mask: a
+    type: bag-full
+    material: "RED_STAINED_GLASS_PANE"
+    name: "&cThe talismans bag is full!"
+  renew: # This item is NOT required, you can remove it
+    mask: a
+    type: bag-renew
+    material: "GREEN_STAINED_GLASS_PANE"
+    name: "&aFound new talisman, please close the bag to apply the effects!"
+  t:
+    type: empty-slot
+    # Empty slot will follow this order to show
+    orders: [10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43]
+  block:
+    type: block-slot
+    material: "BLACK_STAINED_GLASS_PANE"
+    name: "&c&lThis slot is blocked!"
+    lore:
+      - ""
+      - "&7You can go to shop to purchase new slots."

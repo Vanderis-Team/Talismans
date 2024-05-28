@@ -1,0 +1,29 @@
+name: "Strengthen Sword I"
+description:
+  - ""
+  - "&7Deal 10% more damage with sword"
+higherLevelOf: []
+item: player_head
+texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTVkNzZkOTBiMzc4MDgzZDE0Nzc1NjgwNTA1ZGRiMWU2YzJjNmRjZjRkZGU3ZjliMWY1ODgwOWJlYzZjNjVjOCJ9fX0="
+craftable: true
+recipe:
+  - "iron_sword"
+  - "iron_sword"
+  - "iron_sword"
+
+  - "iron_sword"
+  - "copper_block 3"
+  - "iron_sword"
+
+  - "iron_sword"
+  - "iron_sword"
+  - "iron_sword"
+
+effects:
+  - id: damage_multiplier
+    args:
+      multiplier: 1.1
+    triggers:
+      - melee_attack
+
+conditions: []
