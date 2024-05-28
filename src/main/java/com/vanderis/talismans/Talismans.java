@@ -1,4 +1,4 @@
-package me.adselvn.talismans;
+package com.vanderis.talismans;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
