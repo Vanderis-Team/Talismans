@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'com.vanderis'
@@ -7,6 +9,9 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url = "https://jitpack.io"
+    }
     maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
@@ -19,6 +24,42 @@ repositories {
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT"
+
+    implementation "org.projectlombok:lombok:1.18.32"
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    implementation "com.github.huynhphap100:PluginSpigotTools:main-SNAPSHOT"
+}
+
+tasks.jar.configure {
+    archiveClassifier = 'default'
+}
+
+shadowJar.configure {
+    archiveClassifier  = null
+}
+
+shadowJar {
+    archiveBaseName.set('Talismans')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+
+    dependencies {
+        include(dependency('com.vanderis:talismans:1.0-SNAPSHOT'))
+        include(dependency('com.github.huynhphap100:PluginSpigotTools:main-SNAPSHOT'))
+    }
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            groupId = 'com.vanderis'
+            artifactId = 'talismans'
+            version = '1.0-SNAPSHOT'
+
+            project.shadow.component(publication)
+        }
+    }
 }
 
 processResources {

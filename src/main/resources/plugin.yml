@@ -1,5 +1,11 @@
 name: Talismans
 version: '${version}'
-main: me.adselvn.talismans.Talismans
+main: com.vanderis.talismans.Talismans
 api-version: '1.13'
 author: "Vanderis-Team"
+
+commands:
+  talismans:
+    description: "Command main"
+  talisman:
+    description: "Command main"
