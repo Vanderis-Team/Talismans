@@ -2,7 +2,7 @@ package com.vanderis.talismans;
 
 import com.vanderis.talismans.commands.MainCommand;
 import com.vanderis.talismans.functions.VersionSystem;
-import com.vanderis.talismans.managers.PathManager;
+import com.vanderis.talismans.managers.*;
 import lombok.Getter;
 import me.orineko.pluginspigottools.CommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +13,8 @@ public final class Talismans extends JavaPlugin {
     private static Talismans instance;
 
     private PathManager pathManager;
+    private BagManager bagManager;
+    private ItemManager itemManager;
 
     private VersionSystem versionSystem;
 
@@ -33,6 +35,11 @@ public final class Talismans extends JavaPlugin {
     private void registerManagers() {
         pathManager = new PathManager();
         pathManager.register();
+
+        bagManager = new BagManager();
+
+        itemManager = new ItemManager();
+        itemManager.loadTalismans();
     }
 
     private void registerSystems() {
