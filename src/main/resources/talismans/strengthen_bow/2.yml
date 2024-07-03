@@ -1,5 +1,4 @@
 item-result: []
-override: []
 craftable: true
 recipe:
   1: []
@@ -13,4 +12,4 @@ recipe:
   9: []
 
 values:
-  damage_multiplier: 1.1
+  damage_multiplier: 1.2

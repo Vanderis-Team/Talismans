@@ -37,8 +37,11 @@ public class ItemManager {
 
                 TalismanName talismanName = TalismanName.valueOf(file.getName().toUpperCase());
                 switch (talismanName) { // TODO: Something better
-                    case STRENGTHEN_SWORD:
-                        load(new StrengthenSword(talismanLevel));
+                    case STRENGTHEN_MELEE:
+                        load(new StrengthenMelee(talismanLevel));
+                        break;
+                    case STRENGTHEN_BOW:
+                        load(new StrengthenBow(talismanLevel));
                         break;
                     case FLAME_RELIC:
                         load(new FlameRelic(talismanLevel));

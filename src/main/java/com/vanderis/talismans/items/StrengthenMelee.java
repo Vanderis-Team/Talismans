@@ -1,17 +1,17 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.containers.ItemData;
+import com.vanderis.talismans.containers.*;
 import com.vanderis.talismans.enums.TalismanName;
 import com.vanderis.talismans.text.ItemType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class StrengthenBow extends ItemData {
+public class StrengthenMelee extends ItemData {
 
-    public StrengthenBow(Integer level) {
-        super(TalismanName.STRENGTHEN_BOW, level);
+    public StrengthenMelee(Integer level) {
+        super(TalismanName.STRENGTHEN_MELEE, level);
     }
 
     @EventHandler
@@ -24,7 +24,7 @@ public class StrengthenBow extends ItemData {
         if (!Talismans.getInstance().getBagManager().hasTalisman(player, this))
             return;
 
-        if (ItemType.BOW.isPlayerHeldType(player)) {
+        if (ItemType.MELEE.isPlayerHeldType(player)) {
             event.setDamage(event.getDamage() + (event.getDamage() * getValueAsInt("damage_multiplier")));
         }
     }

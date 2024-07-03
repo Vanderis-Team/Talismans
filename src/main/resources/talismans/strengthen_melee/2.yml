@@ -1,6 +1,4 @@
 item-result: []
-override:
-  - "strenthen_sword:1"
 craftable: true
 recipe:
   1: []

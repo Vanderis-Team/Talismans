@@ -20,7 +20,6 @@ public abstract class ItemData implements Listener {
     protected Integer level;
     protected FileManager fileManager;
     protected ItemStack itemResult;
-    protected List<String> override;
     protected Boolean craftable;
     protected List<ItemStack> recipe;
     protected HashMap<String, String> values = new HashMap<>();
