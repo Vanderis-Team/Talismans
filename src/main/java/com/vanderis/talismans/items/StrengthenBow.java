@@ -26,7 +26,7 @@ public class StrengthenSword extends ItemData {
         if (!Talismans.getInstance().getBagManager().hasTalisman(player, this))
             return;
 
-        if (ItemType.isPlayerHeldMelee(player)) {
+        if (ItemType.BOW.isPlayerHeldType(player)) {
             event.setDamage(event.getDamage() + (event.getDamage() * getValueAsInt("damage_multiplier")));
         }
     }

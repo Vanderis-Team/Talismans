@@ -7,21 +7,33 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-@UtilityClass
-public class ItemType {
+public enum ItemType {
 
-    private final Set<String> melee = Set.of("SWORD", "AXE", "TRIDENT", "HOE", "PICKAXE", "SHOVEL");
+    MELEE, SWORD, BOW;
 
-    public Boolean isMelee(ItemStack itemStack) {
-        return melee.stream().anyMatch(type -> itemStack.getType().name().contains(type));
+    public final Set<String> melee = Set.of("SWORD", "AXE", "TRIDENT", "HOE", "PICKAXE", "SHOVEL");
+    public final Set<String> sword = Set.of("SWORD");
+    public final Set<String> bow = Set.of("BOW", "CROSSBOW");
+
+    public Boolean isRightType(ItemStack itemStack) {
+        switch (this) {
+            case MELEE:
+                return melee.stream().anyMatch(type -> itemStack.getType().name().contains(type));
+            case SWORD:
+                return sword.stream().anyMatch(type -> itemStack.getType().name().contains(type));
+            case BOW:
+                return bow.stream().anyMatch(type -> itemStack.getType().name().contains(type));
+        }
+
+        return false;
     }
 
     @SuppressWarnings("deprecation")
-    public Boolean isPlayerHeldMelee(Player player) {
+    public Boolean isPlayerHeldType(Player player) {
         if (Talismans.getInstance().getVersionSystem().getServerVersion() == 8) {
-            return isMelee(player.getItemInHand());
+            return isRightType(player.getItemInHand());
         } else {
-            return isMelee(player.getInventory().getItemInMainHand()) || isMelee(player.getInventory().getItemInOffHand());
+            return isRightType(player.getInventory().getItemInMainHand()) || isRightType(player.getInventory().getItemInOffHand());
         }
     }
 
