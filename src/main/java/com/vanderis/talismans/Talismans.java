@@ -13,6 +13,7 @@ public final class Talismans extends JavaPlugin {
     private static Talismans instance;
 
     private PathManager pathManager;
+    private FileManager fileManager;
     private BagManager bagManager;
     private ItemManager itemManager;
 
@@ -36,10 +37,13 @@ public final class Talismans extends JavaPlugin {
         pathManager = new PathManager();
         pathManager.register();
 
+        fileManager = new FileManager();
+        fileManager.register();
+
         bagManager = new BagManager();
 
         itemManager = new ItemManager();
-        itemManager.loadTalismans();
+        itemManager.register();
     }
 
     private void registerSystems() {

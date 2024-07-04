@@ -1,0 +1,87 @@
+package com.vanderis.talismans.containers;
+
+import com.vanderis.talismans.converters.MaterialConverter;
+import com.vanderis.talismans.messages.Color;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.*;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public abstract class GUIHolder implements InventoryHolder {
+
+    protected final FileConfiguration fileConfiguration;
+    protected final List<GUIItem> items;
+    protected Inventory inventory;
+
+    public GUIHolder(FileConfiguration fileConfiguration) {
+        this.fileConfiguration = fileConfiguration;
+
+        String title = Color.color(fileConfiguration.getString("title"));
+        int rowSize = Math.min(fileConfiguration.getStringList("format").size(), 6);
+
+        this.inventory = Bukkit.createInventory(this, rowSize * 9, title);
+
+        this.items = new ArrayList<>();
+    }
+
+    public void openInventory(Player player) {
+        player.openInventory(inventory);
+
+        updateInventory();
+    }
+
+    public boolean updateInventory() {
+        List<String> format = this.fileConfiguration.getStringList("format");
+
+        this.inventory.clear();
+        this.items.clear();
+
+        format = format.stream().map(StringBuilder::new).map(s -> {
+            if (s.length() > 9) return s.substring(0, 8);
+            if (s.length() < 9) s.append("?".repeat(Math.max(0, 9 - s.length() + 1)));
+            return s;
+        }).map(Object::toString).collect(Collectors.toList());
+
+        String formatString = String.join("", format);
+
+        ConfigurationSection sectionItem = this.fileConfiguration.getConfigurationSection("Items");
+
+        if (sectionItem == null)
+            return false;
+
+        sectionItem.getKeys(false).forEach(sec -> {
+            char character = sec.charAt(0);
+            if (!formatString.contains(String.valueOf(character)))
+                return;
+
+            String mask = this.fileConfiguration.getString("items." + character + ".mask");
+            String type = this.fileConfiguration.getString("items." + character + ".type");
+            ItemStack itemStack = MaterialConverter.getItemStackByFile(this.fileConfiguration, "items." + character);
+
+            GUIItem guiItem = new GUIItem(character, mask, type, itemStack);
+
+            this.items.add(guiItem);
+        });
+
+        for (int i = 0; i < formatString.length(); i++) {
+            GUIItem guiItem = getItemManager(formatString.charAt(i));
+            if (guiItem == null) continue;
+
+            guiItem.getSlotList().add(i);
+            this.inventory.setItem(i, guiItem.getItemStack());
+        }
+
+        return true;
+    }
+
+    @Nullable
+    public GUIItem getItemManager(char character) {
+        return items.stream().filter(i -> i.getCharacter() == character).findAny().orElse(null);
+    }
+
+}

@@ -13,8 +13,8 @@ public class ItemManager {
 
     private List<ItemData> itemList = new ArrayList<>();
 
-    public void load(ItemData data) {
-        itemList.add(data);
+    public void register() {
+        loadTalismans();
     }
 
     public void loadTalismans() {
@@ -37,14 +37,20 @@ public class ItemManager {
 
                 TalismanName talismanName = TalismanName.valueOf(file.getName().toUpperCase());
                 switch (talismanName) { // TODO: Something better
+                    case STRENGTHEN_WEAPON:
+                        load(new StrengthenWeapon(talismanName, talismanLevel));
+                        break;
                     case STRENGTHEN_MELEE:
-                        load(new StrengthenMelee(talismanLevel));
+                        load(new StrengthenMelee(talismanName, talismanLevel));
                         break;
                     case STRENGTHEN_BOW:
-                        load(new StrengthenBow(talismanLevel));
+                        load(new StrengthenBow(talismanName, talismanLevel));
+                        break;
+                    case STRENGTHEN_SWORD:
+                        load(new StrengthenSword(talismanName, talismanLevel));
                         break;
                     case FLAME_RELIC:
-                        load(new FlameRelic(talismanLevel));
+                        load(new FlameRelic(talismanName, talismanLevel));
                         break;
                     default:
                         break;
@@ -53,6 +59,10 @@ public class ItemManager {
 
 
         }
+    }
+
+    public void load(ItemData data) {
+        itemList.add(data);
     }
 
     @Nullable

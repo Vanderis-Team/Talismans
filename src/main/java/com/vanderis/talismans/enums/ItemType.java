@@ -1,7 +1,6 @@
-package com.vanderis.talismans.text;
+package com.vanderis.talismans.enums;
 
 import com.vanderis.talismans.Talismans;
-import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
