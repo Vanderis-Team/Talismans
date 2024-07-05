@@ -1,5 +1,7 @@
 package com.vanderis.talismans.commands;
 
+import com.vanderis.talismans.containers.Instance;
+import com.vanderis.talismans.gui.BagGUI;
 import com.vanderis.talismans.managers.PathManager;
 import com.vanderis.talismans.messages.Logging;
 import me.orineko.pluginspigottools.CommandManager;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @CommandManager.CommandInfo(aliases = {"talismans", "talisman"}, permissions = "talismans.admin")
-public class MainCommand extends CommandManager {
+public class MainCommand extends CommandManager implements Instance {
 
     public MainCommand(@Nonnull Plugin plugin) {
         super(plugin);
@@ -47,6 +49,10 @@ public class MainCommand extends CommandManager {
         Logging.debug = !Logging.debug;
     }
 
+    @CommandSub(length = 0, names = "bag", permissions = "talismans.bag", justPlayerUseCmd = true)
+    public void onOpenBag(Player player, String[] args) {
+        instance.getGuiSystem().openGUI(player, new BagGUI());
+    }
 
     @Nullable
     @Override

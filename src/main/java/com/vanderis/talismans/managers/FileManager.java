@@ -2,9 +2,7 @@ package com.vanderis.talismans.managers;
 
 import com.vanderis.talismans.containers.Instance;
 import lombok.SneakyThrows;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import java.io.File;
+import org.bukkit.configuration.file.*;
 
 public class FileManager implements Instance {
 
@@ -15,10 +13,10 @@ public class FileManager implements Instance {
 
     @SneakyThrows
     public void register() {
-        collectionsGUI.load(new File(instance.getDataFolder(), "/gui/collections.yml"));
-        bagGUI.load(new File(instance.getDataFolder(), "/gui/bag.yml"));
-        editGUI.load(new File(instance.getDataFolder(), "/gui/edit.yml"));
-        craftingGUI.load(new File(instance.getDataFolder(), "/gui/crafting.yml"));
+        collectionsGUI = new me.orineko.pluginspigottools.FileManager("gui/collections.yml", instance).copyDefault();
+        bagGUI = new me.orineko.pluginspigottools.FileManager("gui/bag.yml", instance).copyDefault();
+        editGUI = new me.orineko.pluginspigottools.FileManager("gui/edit.yml", instance).copyDefault();
+        craftingGUI = new me.orineko.pluginspigottools.FileManager("gui/crafting.yml", instance).copyDefault();
     }
 
 }

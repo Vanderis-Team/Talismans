@@ -1,7 +1,7 @@
 package com.vanderis.talismans;
 
 import com.vanderis.talismans.commands.MainCommand;
-import com.vanderis.talismans.functions.VersionSystem;
+import com.vanderis.talismans.functions.*;
 import com.vanderis.talismans.managers.*;
 import lombok.Getter;
 import me.orineko.pluginspigottools.CommandManager;
@@ -18,6 +18,7 @@ public final class Talismans extends JavaPlugin {
     private ItemManager itemManager;
 
     private VersionSystem versionSystem;
+    private GUISystem guiSystem;
 
     @Override
     public void onEnable() {
@@ -48,6 +49,7 @@ public final class Talismans extends JavaPlugin {
 
     private void registerSystems() {
         versionSystem = new VersionSystem();
+        guiSystem = new GUISystem();
     }
 
     private void registerCommands() {

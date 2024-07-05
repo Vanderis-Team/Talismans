@@ -1,15 +1,16 @@
 package com.vanderis.talismans.managers;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.containers.ItemData;
+import com.vanderis.talismans.containers.*;
 import com.vanderis.talismans.enums.TalismanName;
 import com.vanderis.talismans.items.*;
+import me.orineko.pluginspigottools.FileManager;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
-public class ItemManager {
+public class ItemManager implements Instance {
 
     private List<ItemData> itemList = new ArrayList<>();
 
@@ -33,6 +34,8 @@ public class ItemManager {
                 continue;
 
             for (File level : levelFile) {
+                new FileManager("talismans/" + file.getName() + "/" + level.getName() + ".yml", instance).copyDefault();
+
                 Integer talismanLevel = Integer.parseInt(level.getName().replace(".yml", ""));
 
                 TalismanName talismanName = TalismanName.valueOf(file.getName().toUpperCase());

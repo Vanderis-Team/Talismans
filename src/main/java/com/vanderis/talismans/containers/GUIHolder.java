@@ -1,7 +1,7 @@
 package com.vanderis.talismans.containers;
 
 import com.vanderis.talismans.converters.MaterialConverter;
-import com.vanderis.talismans.messages.Color;
+import com.vanderis.talismans.messages.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,6 +16,7 @@ public abstract class GUIHolder implements InventoryHolder {
 
     protected final FileConfiguration fileConfiguration;
     protected final List<GUIItem> items;
+    protected final List<String> slotType;
     protected Inventory inventory;
 
     public GUIHolder(FileConfiguration fileConfiguration) {
@@ -27,6 +28,7 @@ public abstract class GUIHolder implements InventoryHolder {
         this.inventory = Bukkit.createInventory(this, rowSize * 9, title);
 
         this.items = new ArrayList<>();
+        this.slotType = new ArrayList<>();
     }
 
     public void openInventory(Player player) {
@@ -36,6 +38,10 @@ public abstract class GUIHolder implements InventoryHolder {
     }
 
     public boolean updateInventory() {
+        return updateInventory(null);
+    }
+
+    public boolean updateInventory(List<String> guiItemTypeUpdate) {
         List<String> format = this.fileConfiguration.getStringList("format");
 
         this.inventory.clear();
@@ -49,7 +55,7 @@ public abstract class GUIHolder implements InventoryHolder {
 
         String formatString = String.join("", format);
 
-        ConfigurationSection sectionItem = this.fileConfiguration.getConfigurationSection("Items");
+        ConfigurationSection sectionItem = this.fileConfiguration.getConfigurationSection("items");
 
         if (sectionItem == null)
             return false;
@@ -69,19 +75,52 @@ public abstract class GUIHolder implements InventoryHolder {
         });
 
         for (int i = 0; i < formatString.length(); i++) {
-            GUIItem guiItem = getItemManager(formatString.charAt(i));
+            boolean overrideItem = false;
+
+            if (guiItemTypeUpdate != null) {
+                for (String type : guiItemTypeUpdate) {
+                    GUIItem guiItem = getGUIItem(type);
+                    if (guiItem == null || guiItem.getMask() == null) continue;
+
+                    if (guiItem.getMask().charAt(0) == formatString.charAt(i)) {
+                        guiItem.getSlotList().add(i);
+                        this.inventory.setItem(i, guiItem.getItemStack());
+                        this.slotType.add(guiItem.getType());
+
+                        overrideItem = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (overrideItem)
+                continue;
+
+            GUIItem guiItem = getGUIItem(formatString.charAt(i));
             if (guiItem == null) continue;
 
             guiItem.getSlotList().add(i);
             this.inventory.setItem(i, guiItem.getItemStack());
+            this.slotType.add(guiItem.getType());
         }
 
         return true;
     }
 
     @Nullable
-    public GUIItem getItemManager(char character) {
+    public GUIItem getGUIItem(char character) {
         return items.stream().filter(i -> i.getCharacter() == character).findAny().orElse(null);
+    }
+
+    @Nullable
+    public GUIItem getGUIItem(String type) {
+        return items.stream().filter(i -> i.getType().equalsIgnoreCase(type)).findAny().orElse(null);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
     }
 
 }

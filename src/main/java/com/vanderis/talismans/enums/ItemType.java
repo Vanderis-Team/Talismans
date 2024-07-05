@@ -4,7 +4,7 @@ import com.vanderis.talismans.Talismans;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.Set;
 
 public enum ItemType {
 

@@ -2,8 +2,7 @@ package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.containers.ItemData;
-import com.vanderis.talismans.enums.TalismanName;
-import com.vanderis.talismans.enums.ItemType;
+import com.vanderis.talismans.enums.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
