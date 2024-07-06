@@ -20,7 +20,7 @@ public class StrengthenSword extends ItemData {
 
         Player player = (Player) event.getEntity();
 
-        if (!Talismans.getInstance().getBagManager().hasTalisman(player, this))
+        if (!Talismans.getInstance().getItemManager().hasItem(player, this))
             return;
 
         if (ItemType.SWORD.isPlayerHeldType(player)) {

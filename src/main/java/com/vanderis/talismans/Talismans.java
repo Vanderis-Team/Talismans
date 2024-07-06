@@ -2,9 +2,11 @@ package com.vanderis.talismans;
 
 import com.vanderis.talismans.commands.MainCommand;
 import com.vanderis.talismans.functions.*;
+import com.vanderis.talismans.listeners.*;
 import com.vanderis.talismans.managers.*;
 import lombok.Getter;
 import me.orineko.pluginspigottools.CommandManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -32,6 +34,14 @@ public final class Talismans extends JavaPlugin {
         registerManagers();
 
         registerCommands();
+
+        registerEvents();
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        unregisterManagers();
     }
 
     private void registerManagers() {
@@ -42,9 +52,14 @@ public final class Talismans extends JavaPlugin {
         fileManager.register();
 
         bagManager = new BagManager();
+        bagManager.register();
 
         itemManager = new ItemManager();
         itemManager.register();
+    }
+
+    private void unregisterManagers() {
+        bagManager.unregister();
     }
 
     private void registerSystems() {
@@ -56,9 +71,9 @@ public final class Talismans extends JavaPlugin {
         CommandManager.CommandRegistry.register(true, this, new MainCommand(this));
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    private void registerEvents() {
+        Bukkit.getServer().getPluginManager().registerEvents(new ClickEvent(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new QuitEvent(), this);
     }
 
     public static Talismans getInstance() {

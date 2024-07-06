@@ -1,7 +1,9 @@
 package com.vanderis.talismans.containers;
 
+import com.vanderis.talismans.constructors.GUIItem;
 import com.vanderis.talismans.converters.MaterialConverter;
-import com.vanderis.talismans.messages.*;
+import com.vanderis.talismans.messages.Color;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,11 +14,12 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public abstract class GUIHolder implements InventoryHolder {
 
     protected final FileConfiguration fileConfiguration;
     protected final List<GUIItem> items;
-    protected final List<String> slotType;
+    protected final List<GUIItem> itemsPutInGUI;
     protected Inventory inventory;
 
     public GUIHolder(FileConfiguration fileConfiguration) {
@@ -28,7 +31,7 @@ public abstract class GUIHolder implements InventoryHolder {
         this.inventory = Bukkit.createInventory(this, rowSize * 9, title);
 
         this.items = new ArrayList<>();
-        this.slotType = new ArrayList<>();
+        this.itemsPutInGUI = new ArrayList<>();
     }
 
     public void openInventory(Player player) {
@@ -85,7 +88,7 @@ public abstract class GUIHolder implements InventoryHolder {
                     if (guiItem.getMask().charAt(0) == formatString.charAt(i)) {
                         guiItem.getSlotList().add(i);
                         this.inventory.setItem(i, guiItem.getItemStack());
-                        this.slotType.add(guiItem.getType());
+                        this.itemsPutInGUI.add(guiItem);
 
                         overrideItem = true;
 
@@ -102,7 +105,7 @@ public abstract class GUIHolder implements InventoryHolder {
 
             guiItem.getSlotList().add(i);
             this.inventory.setItem(i, guiItem.getItemStack());
-            this.slotType.add(guiItem.getType());
+            this.itemsPutInGUI.add(guiItem);
         }
 
         return true;

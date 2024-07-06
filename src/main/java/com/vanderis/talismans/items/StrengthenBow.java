@@ -20,7 +20,7 @@ public class StrengthenBow extends ItemData {
 
         Player player = (Player) event.getEntity();
 
-        if (!Talismans.getInstance().getBagManager().hasTalisman(player, this))
+        if (!Talismans.getInstance().getItemManager().hasItem(player, this))
             return;
 
         if (ItemType.BOW.isPlayerHeldType(player)) {
