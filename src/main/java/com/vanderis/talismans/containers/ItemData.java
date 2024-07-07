@@ -7,6 +7,7 @@ import me.orineko.pluginspigottools.FileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,6 +50,10 @@ public abstract class ItemData implements Listener {
                 values.put(key, configSec.getString(key));
             });
 
+    }
+
+    public void giveItemResult(Player player) {
+        player.getInventory().addItem(itemResult);
     }
 
 }

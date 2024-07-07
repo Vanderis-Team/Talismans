@@ -92,6 +92,21 @@ public class BagManager implements Instance {
         return result;
     }
 
+    public Boolean isBagEmpty(Player player) {
+        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).isEmpty();
+    }
+
+    public ItemData getItem(Player player, Integer index) {
+        if (index > playerBag.size())
+            return null;
+
+        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).get(index);
+    }
+
+    public List<ItemData> getItems(Player player) {
+        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>());
+    }
+
     public void onQuit(PlayerQuitEvent event) {
         removeCache(event.getPlayer());
     }

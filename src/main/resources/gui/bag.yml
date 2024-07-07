@@ -23,7 +23,7 @@ items:
     material: "GREEN_STAINED_GLASS_PANE"
     name: "&aFound new talisman, please close the bag to apply the effects!"
   d:
-    type: empty-slot
+    type: item-slot
     material: "AIR"
   e:
     mask: d

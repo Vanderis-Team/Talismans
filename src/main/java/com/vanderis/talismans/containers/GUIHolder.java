@@ -20,6 +20,7 @@ public abstract class GUIHolder implements InventoryHolder {
     protected final FileConfiguration fileConfiguration;
     protected final List<GUIItem> items;
     protected final List<GUIItem> itemsPutInGUI;
+    protected Player viewer;
     protected Inventory inventory;
 
     public GUIHolder(FileConfiguration fileConfiguration) {
@@ -35,6 +36,8 @@ public abstract class GUIHolder implements InventoryHolder {
     }
 
     public void openInventory(Player player) {
+        this.viewer = player;
+
         player.openInventory(inventory);
 
         updateInventory();
@@ -119,6 +122,30 @@ public abstract class GUIHolder implements InventoryHolder {
     @Nullable
     public GUIItem getGUIItem(String type) {
         return items.stream().filter(i -> i.getType().equalsIgnoreCase(type)).findAny().orElse(null);
+    }
+
+    public String getType(Integer slot) {
+        return itemsPutInGUI.get(slot).getType();
+    }
+
+    public Boolean isType(Integer slot, String type) {
+        return getType(slot).equalsIgnoreCase(type);
+    }
+
+    public Integer getTypeOrder(Integer slot, String type) {
+        Integer order = -1;
+
+        for (int i = 0; i < itemsPutInGUI.size(); i++) {
+            GUIItem item = itemsPutInGUI.get(i);
+
+            if (item.getType().equalsIgnoreCase(type))
+                order++;
+
+            if (slot == i)
+                return order;
+        }
+
+        return order;
     }
 
     @Override
