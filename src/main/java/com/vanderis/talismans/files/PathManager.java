@@ -1,11 +1,13 @@
-package com.vanderis.talismans.managers;
+package com.vanderis.talismans.files;
 
-import com.vanderis.talismans.containers.Instance;
-import com.vanderis.talismans.utils.Color;
+import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.utils.*;
 
 import java.util.*;
 
-public class PathManager implements Instance {
+public class PathManager {
+
+    private final Talismans instance = Talismans.getInstance();
 
     public static HashMap<String, List<String>> HELP;
     public static HashMap<String, List<String>> ADMIN_HELP;
@@ -21,7 +23,7 @@ public class PathManager implements Instance {
     private List<String> help1() {
         String title;
 
-        if (instance.getVersionSystem().getServerVersion() >= 16)
+        if (Version.getServerVersion() >= 16)
             title = "           #8413FBT#8B20FBA#922EFBL#993BFCI#A049FCS#A756FCM#AE64FCA#B571FDN#BC7FFDS #C99AFDC#D0A7FEO#D7B5FEM#DEC2FEM#E5D0FEA#ECDDFFN#F3EBFFD#FAF8FFS";
         else
             title = "           &5&lTALISMANS COMMANDS";
@@ -37,7 +39,7 @@ public class PathManager implements Instance {
     private List<String> adminHelp1() {
         String title;
 
-        if (instance.getVersionSystem().getServerVersion() >= 16)
+        if (Version.getServerVersion() >= 16)
             title = "           #8413FBT#8B20FBA#922EFBL#993BFCI#A049FCS#A756FCM#AE64FCA#B571FDN#BC7FFDS #C99AFDC#D0A7FEO#D7B5FEM#DEC2FEM#E5D0FEA#ECDDFFN#F3EBFFD#FAF8FFS";
         else
             title = "           &5&lTALISMANS COMMANDS";

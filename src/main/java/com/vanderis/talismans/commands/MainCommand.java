@@ -1,9 +1,9 @@
 package com.vanderis.talismans.commands;
 
-import com.vanderis.talismans.containers.Instance;
-import com.vanderis.talismans.items.enums.ItemName;
-import com.vanderis.talismans.bag.gui.BagGUI;
-import com.vanderis.talismans.managers.PathManager;
+import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.files.PathManager;
+import com.vanderis.talismans.gui.bag.BagGUI;
+import com.vanderis.talismans.items.ItemName;
 import com.vanderis.talismans.utils.Logging;
 import lombok.SneakyThrows;
 import me.orineko.pluginspigottools.CommandManager;
@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @CommandManager.CommandInfo(aliases = {"talismans", "talisman"}, permissions = "talismans.admin")
-public class MainCommand extends CommandManager implements Instance {
+public class MainCommand extends CommandManager {
+
+    private final Talismans instance = Talismans.getInstance();
 
     public MainCommand(@Nonnull Plugin plugin) {
         super(plugin);
@@ -50,7 +52,8 @@ public class MainCommand extends CommandManager implements Instance {
         list.forEach(sender::sendMessage);
     }
 
-    @CommandSub(length = 3, names = "give", permissions = "talismans.give") @SneakyThrows
+    @CommandSub(length = 3, names = "give", permissions = "talismans.give")
+    @SneakyThrows
     public void onGive(Player player, String[] args) {
         Logging.debug("Give Command", "Args Length: " + args.length);
 
@@ -68,12 +71,18 @@ public class MainCommand extends CommandManager implements Instance {
 
     @CommandSub(length = 0, names = "bag", permissions = "talismans.bag", justPlayerUseCmd = true)
     public void onOpenBag(Player player, String[] args) {
-        instance.getGuiSystem().openGUI(player, new BagGUI());
+        switch (args.length) {
+            case 1:
+                instance.getGuiSystem().openGUI(player, new BagGUI(player.getName()));
+                break;
+            case 2:
+                instance.getGuiSystem().openGUI(player, new BagGUI(args[1]));
+        }
     }
 
     @CommandSub(length = 0, names = "status", permissions = "talismans.bag", justPlayerUseCmd = true)
     public void onStatus(Player player, String[] args) {
-        instance.getGuiSystem().openGUI(player, new BagGUI());
+
     }
 
     @CommandSub(length = 0, names = "debug", permissions = "talismans.debug", justPlayerUseCmd = true)
@@ -87,6 +96,23 @@ public class MainCommand extends CommandManager implements Instance {
         if (checkEqualArgs(args, 0, "give")) {
             if (args.length == 3) {
                 return Arrays.stream(ItemName.values()).map(ItemName::name).collect(Collectors.toList());
+            }
+            if (args.length == 4) {
+                if (args[2].isEmpty()) return null;
+
+                ItemName itemName = ItemName.valueOf(args[2].toUpperCase());
+
+
+                long count = instance.getItemManager().itemList.stream().filter(itemData -> itemData.getId() == itemName).count();
+
+                Logging.log("count: " + count);
+                List<String> result = new ArrayList<>();
+
+                for (long i = 1; i <= count; i++) {
+                    result.add(String.valueOf(i));
+                }
+
+                return result;
             }
         }
 

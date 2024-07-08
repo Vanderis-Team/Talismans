@@ -1,12 +1,11 @@
 package com.vanderis.talismans;
 
-import com.vanderis.talismans.bag.managers.BagManager;
+import com.vanderis.talismans.gui.bag.BagManager;
 import com.vanderis.talismans.commands.MainCommand;
-import com.vanderis.talismans.functions.*;
-import com.vanderis.talismans.gui.functions.GUISystem;
-import com.vanderis.talismans.items.managers.ItemManager;
+import com.vanderis.talismans.files.*;
+import com.vanderis.talismans.gui.GUISystem;
+import com.vanderis.talismans.items.ItemManager;
 import com.vanderis.talismans.listeners.*;
-import com.vanderis.talismans.managers.*;
 import lombok.Getter;
 import me.orineko.pluginspigottools.CommandManager;
 import org.bukkit.Bukkit;
@@ -22,7 +21,6 @@ public final class Talismans extends JavaPlugin {
     private BagManager bagManager;
     private ItemManager itemManager;
 
-    private VersionSystem versionSystem;
     private GUISystem guiSystem;
 
     @Override
@@ -66,7 +64,6 @@ public final class Talismans extends JavaPlugin {
     }
 
     private void registerSystems() {
-        versionSystem = new VersionSystem();
         guiSystem = new GUISystem();
     }
 

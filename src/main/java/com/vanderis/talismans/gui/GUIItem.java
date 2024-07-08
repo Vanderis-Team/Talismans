@@ -1,4 +1,4 @@
-package com.vanderis.talismans.gui.constructors;
+package com.vanderis.talismans.gui;
 
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;

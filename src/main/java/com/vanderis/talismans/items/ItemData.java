@@ -1,7 +1,6 @@
-package com.vanderis.talismans.items.containers;
+package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.items.enums.ItemName;
 import lombok.Getter;
 import me.orineko.pluginspigottools.FileManager;
 import org.bukkit.Bukkit;

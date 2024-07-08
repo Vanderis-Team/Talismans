@@ -1,11 +1,9 @@
-package com.vanderis.talismans.gui.functions;
+package com.vanderis.talismans.gui;
 
-import com.vanderis.talismans.bag.managers.BagManager;
-import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.bag.gui.BagGUI;
-import com.vanderis.talismans.gui.containers.GUIHolder;
-import com.vanderis.talismans.items.containers.ItemData;
-import com.vanderis.talismans.items.managers.ItemManager;
+import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.gui.bag.BagGUI;
+import com.vanderis.talismans.gui.bag.BagManager;
+import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.utils.Message;
 import my.plugin.utils.XSound;
 import org.bukkit.entity.Player;
@@ -14,7 +12,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class GUISystem implements Instance {
+public class GUISystem {
+
+    private final Talismans instance = Talismans.getInstance();
 
     private final Map<Player, GUIHolder> cacheGUI = new HashMap<>();
 

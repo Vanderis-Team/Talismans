@@ -1,15 +1,15 @@
-package com.vanderis.talismans.items.managers;
+package com.vanderis.talismans.items;
 
-import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.items.containers.ItemData;
-import com.vanderis.talismans.items.enums.ItemName;
+import com.vanderis.talismans.Talismans;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class ItemManager implements Instance {
+public class ItemManager {
+
+    private final Talismans instance = Talismans.getInstance();
 
     public List<ItemData> itemList = new ArrayList<>();
 

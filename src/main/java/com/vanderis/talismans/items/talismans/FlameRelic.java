@@ -1,16 +1,14 @@
-package com.vanderis.talismans.items;
+package com.vanderis.talismans.items.talismans;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.items.containers.ItemData;
-import com.vanderis.talismans.material.enums.*;
-import com.vanderis.talismans.items.enums.ItemName;
+import com.vanderis.talismans.items.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class StrengthenMelee extends ItemData {
+public class FlameRelic extends ItemData {
 
-    public StrengthenMelee(ItemName itemName, Integer level) {
+    public FlameRelic(ItemName itemName, Integer level) {
         super(itemName, level);
     }
 
@@ -24,9 +22,9 @@ public class StrengthenMelee extends ItemData {
         if (!Talismans.getInstance().getItemManager().hasItem(player, this))
             return;
 
-        if (MaterialBundle.MELEE.isPlayerHeldType(player)) {
-            event.setDamage(event.getDamage() + (event.getDamage() * getValueAsInt("damage_multiplier")));
-        }
+        if (event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
+                event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)
+            event.setDamage(event.getDamage() - (event.getDamage() * getValueAsInt("reduce_damage")));
     }
 
 }

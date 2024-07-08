@@ -1,8 +1,6 @@
-package com.vanderis.talismans.gui.containers;
+package com.vanderis.talismans.gui;
 
-import com.vanderis.talismans.gui.constructors.GUIItem;
-import com.vanderis.talismans.material.converters.MaterialConverter;
-import com.vanderis.talismans.utils.Color;
+import com.vanderis.talismans.utils.*;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -73,7 +71,7 @@ public abstract class GUIHolder implements InventoryHolder {
 
             String mask = this.fileConfiguration.getString("items." + character + ".mask");
             String type = this.fileConfiguration.getString("items." + character + ".type");
-            ItemStack itemStack = MaterialConverter.getItemStackByFile(this.fileConfiguration, "items." + character);
+            ItemStack itemStack = MaterialUtils.getItemStackByFile(this.fileConfiguration, "items." + character);
 
             GUIItem guiItem = new GUIItem(character, mask, type, itemStack);
 

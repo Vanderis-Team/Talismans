@@ -1,10 +1,9 @@
-package com.vanderis.talismans.managers;
+package com.vanderis.talismans.files;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.items.containers.ItemData;
-import com.vanderis.talismans.items.enums.ItemName;
 import com.vanderis.talismans.items.*;
+import com.vanderis.talismans.items.talismans.*;
+import com.vanderis.talismans.utils.Logging;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.file.*;
 import org.bukkit.entity.Player;
@@ -12,7 +11,9 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.*;
 
-public class FileManager implements Instance {
+public class FileManager {
+
+    private final Talismans instance = Talismans.getInstance();
 
     public FileConfiguration collectionsGUI;
     public FileConfiguration bagGUI;
@@ -28,22 +29,31 @@ public class FileManager implements Instance {
     }
 
     public void loadItems() {
-        File folder = new File(Talismans.getInstance().getDataFolder(), "talismans");
+        File folder = new File(Talismans.getInstance().getDataFolder() + "/talismans");
         if (!folder.exists()) folder.mkdirs();
 
         File[] talismans = folder.listFiles();
+
+        Logging.log("FileManager / levelFile: " + Arrays.toString(talismans));
 
         if (talismans == null)
             return;
 
         for (File file : talismans) {
             File[] levelFile = file.listFiles();
+            Logging.log("FileManager / file.getName(): " + file.getName());
+
+            Logging.log("FileManager / levelFile: " + Arrays.toString(levelFile));
 
             if (levelFile == null)
                 continue;
 
+
             for (File level : levelFile) {
-                new me.orineko.pluginspigottools.FileManager("talismans/" + file.getName() + "/" + level.getName() + ".yml", instance).copyDefault();
+
+                Logging.log("FileManager / file.getName(): " + level.getName());
+
+                new me.orineko.pluginspigottools.FileManager("talismans/" + file.getName() + "/" + level.getName(), instance).copyDefault();
 
                 Integer talismanLevel = Integer.parseInt(level.getName().replace(".yml", ""));
 

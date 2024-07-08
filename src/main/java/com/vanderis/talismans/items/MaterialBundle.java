@@ -1,6 +1,6 @@
-package com.vanderis.talismans.material.enums;
+package com.vanderis.talismans.items;
 
-import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.utils.Version;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,7 +29,7 @@ public enum MaterialBundle {
 
     @SuppressWarnings("deprecation")
     public Boolean isPlayerHeldType(Player player) {
-        if (Talismans.getInstance().getVersionSystem().getServerVersion() == 8) {
+        if (Version.getServerVersion() == 8) {
             return isRightType(player.getItemInHand());
         } else {
             return isRightType(player.getInventory().getItemInMainHand()) || isRightType(player.getInventory().getItemInOffHand());

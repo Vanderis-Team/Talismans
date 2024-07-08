@@ -1,10 +1,11 @@
-package com.vanderis.talismans.functions;
+package com.vanderis.talismans.utils;
 
-import com.vanderis.talismans.utils.Logging;
+import lombok.experimental.UtilityClass;
 import me.orineko.pluginspigottools.MethodDefault;
 import org.bukkit.Bukkit;
 
-public class VersionSystem {
+@UtilityClass
+public class Version {
 
     public int getServerVersion() {
         try {

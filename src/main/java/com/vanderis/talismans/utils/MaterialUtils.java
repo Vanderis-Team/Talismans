@@ -1,7 +1,6 @@
-package com.vanderis.talismans.material.converters;
+package com.vanderis.talismans.utils;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.vanderis.talismans.utils.Color;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,7 +11,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 @UtilityClass
-public class MaterialConverter {
+public class MaterialUtils {
 
     public ItemStack getItemAllVersion(@Nonnull String material) {
         if (material.isEmpty()) {

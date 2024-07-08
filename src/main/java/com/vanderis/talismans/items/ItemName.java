@@ -1,4 +1,4 @@
-package com.vanderis.talismans.items.enums;
+package com.vanderis.talismans.items;
 
 public enum ItemName {
     STRENGTHEN_WEAPON,
