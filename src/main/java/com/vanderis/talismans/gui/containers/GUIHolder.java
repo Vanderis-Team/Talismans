@@ -1,8 +1,8 @@
-package com.vanderis.talismans.containers;
+package com.vanderis.talismans.gui.containers;
 
-import com.vanderis.talismans.constructors.GUIItem;
-import com.vanderis.talismans.converters.MaterialConverter;
-import com.vanderis.talismans.messages.Color;
+import com.vanderis.talismans.gui.constructors.GUIItem;
+import com.vanderis.talismans.material.converters.MaterialConverter;
+import com.vanderis.talismans.utils.Color;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;

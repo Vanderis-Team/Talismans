@@ -1,4 +1,4 @@
-package com.vanderis.talismans.messages;
+package com.vanderis.talismans.utils;
 
 import lombok.experimental.UtilityClass;
 

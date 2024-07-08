@@ -1,7 +1,7 @@
 package com.vanderis.talismans.managers;
 
 import com.vanderis.talismans.containers.Instance;
-import com.vanderis.talismans.messages.Color;
+import com.vanderis.talismans.utils.Color;
 
 import java.util.*;
 

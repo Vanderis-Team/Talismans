@@ -1,6 +1,6 @@
-package com.vanderis.talismans.enums;
+package com.vanderis.talismans.items.enums;
 
-public enum TalismanName {
+public enum ItemName {
     STRENGTHEN_WEAPON,
     STRENGTHEN_MELEE,
     STRENGTHEN_BOW,

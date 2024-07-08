@@ -1,6 +1,7 @@
-package com.vanderis.talismans.gui;
+package com.vanderis.talismans.bag.gui;
 
 import com.vanderis.talismans.containers.*;
+import com.vanderis.talismans.gui.containers.GUIHolder;
 
 import java.util.List;
 

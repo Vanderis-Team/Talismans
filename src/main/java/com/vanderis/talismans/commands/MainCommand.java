@@ -1,10 +1,10 @@
 package com.vanderis.talismans.commands;
 
 import com.vanderis.talismans.containers.Instance;
-import com.vanderis.talismans.enums.TalismanName;
-import com.vanderis.talismans.gui.BagGUI;
+import com.vanderis.talismans.items.enums.ItemName;
+import com.vanderis.talismans.bag.gui.BagGUI;
 import com.vanderis.talismans.managers.PathManager;
-import com.vanderis.talismans.messages.Logging;
+import com.vanderis.talismans.utils.Logging;
 import lombok.SneakyThrows;
 import me.orineko.pluginspigottools.CommandManager;
 import org.bukkit.command.CommandSender;
@@ -61,14 +61,14 @@ public class MainCommand extends CommandManager implements Instance {
         Logging.debug("Give Command", "Args Length: " + args.length);
 
         if (args.length == 3) {
-            TalismanName talismanName = TalismanName.valueOf(args[1].toUpperCase());
+            ItemName itemName = ItemName.valueOf(args[1].toUpperCase());
             Integer level = Integer.valueOf(args[2]);
 
-            Logging.debug("Give Command", "TalismansName/Level: " + talismanName + "/" + level);
+            Logging.debug("Give Command", "TalismansName/Level: " + itemName + "/" + level);
 
-            instance.getItemManager().getItem(talismanName, level).giveItemResult(player);
+            instance.getItemManager().getItem(itemName, level).giveItemResult(player);
 
-            Logging.debug("Give Command", "ItemResult: " + instance.getItemManager().getItem(talismanName, level).getItemResult());
+            Logging.debug("Give Command", "ItemResult: " + instance.getItemManager().getItem(itemName, level).getItemResult());
         }
     }
 

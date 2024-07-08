@@ -2,7 +2,8 @@ package com.vanderis.talismans.managers;
 
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.enums.TalismanName;
+import com.vanderis.talismans.items.containers.ItemData;
+import com.vanderis.talismans.items.enums.ItemName;
 import com.vanderis.talismans.items.*;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.file.*;
@@ -46,22 +47,22 @@ public class FileManager implements Instance {
 
                 Integer talismanLevel = Integer.parseInt(level.getName().replace(".yml", ""));
 
-                TalismanName talismanName = TalismanName.valueOf(file.getName().toUpperCase());
-                switch (talismanName) { // TODO: Something better
+                ItemName itemName = ItemName.valueOf(file.getName().toUpperCase());
+                switch (itemName) { // TODO: Something better
                     case STRENGTHEN_WEAPON:
-                        load(new StrengthenWeapon(talismanName, talismanLevel));
+                        load(new StrengthenWeapon(itemName, talismanLevel));
                         break;
                     case STRENGTHEN_MELEE:
-                        load(new StrengthenMelee(talismanName, talismanLevel));
+                        load(new StrengthenMelee(itemName, talismanLevel));
                         break;
                     case STRENGTHEN_BOW:
-                        load(new StrengthenBow(talismanName, talismanLevel));
+                        load(new StrengthenBow(itemName, talismanLevel));
                         break;
                     case STRENGTHEN_SWORD:
-                        load(new StrengthenSword(talismanName, talismanLevel));
+                        load(new StrengthenSword(itemName, talismanLevel));
                         break;
                     case FLAME_RELIC:
-                        load(new FlameRelic(talismanName, talismanLevel));
+                        load(new FlameRelic(itemName, talismanLevel));
                         break;
                     default:
                         break;

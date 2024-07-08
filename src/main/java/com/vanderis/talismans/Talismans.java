@@ -1,7 +1,10 @@
 package com.vanderis.talismans;
 
+import com.vanderis.talismans.bag.managers.BagManager;
 import com.vanderis.talismans.commands.MainCommand;
 import com.vanderis.talismans.functions.*;
+import com.vanderis.talismans.gui.functions.GUISystem;
+import com.vanderis.talismans.items.managers.ItemManager;
 import com.vanderis.talismans.listeners.*;
 import com.vanderis.talismans.managers.*;
 import lombok.Getter;

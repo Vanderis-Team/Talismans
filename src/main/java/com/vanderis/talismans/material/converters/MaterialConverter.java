@@ -1,7 +1,7 @@
-package com.vanderis.talismans.converters;
+package com.vanderis.talismans.material.converters;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.vanderis.talismans.messages.Color;
+import com.vanderis.talismans.utils.Color;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;

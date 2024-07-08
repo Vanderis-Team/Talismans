@@ -1,6 +1,6 @@
 package com.vanderis.talismans.functions;
 
-import com.vanderis.talismans.messages.Logging;
+import com.vanderis.talismans.utils.Logging;
 import me.orineko.pluginspigottools.MethodDefault;
 import org.bukkit.Bukkit;
 

@@ -1,9 +1,12 @@
-package com.vanderis.talismans.functions;
+package com.vanderis.talismans.gui.functions;
 
+import com.vanderis.talismans.bag.managers.BagManager;
 import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.gui.BagGUI;
-import com.vanderis.talismans.managers.*;
-import com.vanderis.talismans.messages.Message;
+import com.vanderis.talismans.bag.gui.BagGUI;
+import com.vanderis.talismans.gui.containers.GUIHolder;
+import com.vanderis.talismans.items.containers.ItemData;
+import com.vanderis.talismans.items.managers.ItemManager;
+import com.vanderis.talismans.utils.Message;
 import my.plugin.utils.XSound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

@@ -1,7 +1,8 @@
-package com.vanderis.talismans.managers;
+package com.vanderis.talismans.items.managers;
 
 import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.enums.TalismanName;
+import com.vanderis.talismans.items.containers.ItemData;
+import com.vanderis.talismans.items.enums.ItemName;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,7 +22,7 @@ public class ItemManager implements Instance {
     }
 
     @Nullable
-    public ItemData getItem(TalismanName id, Integer level) {
+    public ItemData getItem(ItemName id, Integer level) {
         return itemList.stream()
                 .filter(itemData -> itemData.getId().equals(id) && itemData.getLevel().equals(level))
                 .findAny().orElse(null);

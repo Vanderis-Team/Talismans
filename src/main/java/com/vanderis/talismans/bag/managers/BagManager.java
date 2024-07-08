@@ -1,7 +1,8 @@
-package com.vanderis.talismans.managers;
+package com.vanderis.talismans.bag.managers;
 
 import com.vanderis.talismans.containers.*;
-import com.vanderis.talismans.enums.TalismanName;
+import com.vanderis.talismans.items.containers.ItemData;
+import com.vanderis.talismans.items.enums.ItemName;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -74,7 +75,7 @@ public class BagManager implements Instance {
         List<ItemData> result = new ArrayList<>();
 
         for (String item : items) {
-            TalismanName id = TalismanName.valueOf(item.split(":")[0]);
+            ItemName id = ItemName.valueOf(item.split(":")[0]);
             Integer level = Integer.parseInt(item.split(":")[1]);
 
             result.add(instance.getItemManager().getItem(id, level));

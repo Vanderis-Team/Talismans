@@ -1,7 +1,7 @@
-package com.vanderis.talismans.containers;
+package com.vanderis.talismans.items.containers;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.enums.TalismanName;
+import com.vanderis.talismans.items.enums.ItemName;
 import lombok.Getter;
 import me.orineko.pluginspigottools.FileManager;
 import org.bukkit.Bukkit;
@@ -16,7 +16,7 @@ import java.util.*;
 @Getter
 public abstract class ItemData implements Listener {
 
-    protected TalismanName id;
+    protected ItemName id;
     protected String name;
     protected Integer level;
     protected FileManager fileManager;
@@ -25,7 +25,7 @@ public abstract class ItemData implements Listener {
     protected List<ItemStack> recipe;
     protected HashMap<String, String> values = new HashMap<>();
 
-    public ItemData(TalismanName id, Integer level) {
+    public ItemData(ItemName id, Integer level) {
         this.id = id;
         this.level = level;
 
