@@ -12,7 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import javax.annotation.*;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @CommandManager.CommandInfo(aliases = {"talismans", "talisman"}, permissions = "talismans.admin")
@@ -75,6 +76,11 @@ public class MainCommand extends CommandManager implements Instance {
     @Nullable
     @Override
     public List<String> executeTabCompleter(@Nonnull CommandSender commandSender, @Nonnull String s, @Nonnull String[] args) {
+        if (checkEqualArgs(args, 0, "give")) {
+            if (args.length == 2) {
+                return Arrays.stream(ItemName.values()).map(ItemName::name).collect(Collectors.toList());
+            }
+        }
 
         return null;
     }
