@@ -7,6 +7,7 @@ import com.vanderis.talismans.managers.PathManager;
 import com.vanderis.talismans.utils.Logging;
 import lombok.SneakyThrows;
 import me.orineko.pluginspigottools.CommandManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -27,34 +28,26 @@ public class MainCommand extends CommandManager implements Instance {
     public void onHelp(CommandSender sender, String[] args) {
         if (PathManager.HELP.isEmpty()) return;
 
+        Map<String, List<String>> helpCache = hasPermission(sender, "talismans.admin") ? PathManager.ADMIN_HELP : PathManager.HELP;
+
         List<String> list = null;
         if (args.length >= 1) {
             Logging.debug("Help Command", "Args Length >= 1");
 
             if (checkEqualArgs(args, 0, "help")) {
                 if (args.length >= 2) {
-                    list = PathManager.HELP.getOrDefault("1", null);
+                    list = helpCache.getOrDefault("1", null);
                 } else
-                    list = PathManager.HELP.getOrDefault("1", null);
+                    list = helpCache.getOrDefault("1", null);
             }
 
         } else {
-            list = PathManager.HELP.getOrDefault("1", null);
+            list = helpCache.getOrDefault("1", null);
         }
 
         if (list == null) return;
 
         list.forEach(sender::sendMessage);
-    }
-
-    @CommandSub(length = 0, names = "debug", permissions = "talismans.debug", justPlayerUseCmd = true)
-    public void onDebug(Player player, String[] args) {
-        Logging.debug = !Logging.debug;
-    }
-
-    @CommandSub(length = 0, names = "bag", permissions = "talismans.bag", justPlayerUseCmd = true)
-    public void onOpenBag(Player player, String[] args) {
-        instance.getGuiSystem().openGUI(player, new BagGUI());
     }
 
     @CommandSub(length = 3, names = "give", permissions = "talismans.give") @SneakyThrows
@@ -73,12 +66,33 @@ public class MainCommand extends CommandManager implements Instance {
         }
     }
 
+    @CommandSub(length = 0, names = "bag", permissions = "talismans.bag", justPlayerUseCmd = true)
+    public void onOpenBag(Player player, String[] args) {
+        instance.getGuiSystem().openGUI(player, new BagGUI());
+    }
+
+    @CommandSub(length = 0, names = "status", permissions = "talismans.bag", justPlayerUseCmd = true)
+    public void onStatus(Player player, String[] args) {
+        instance.getGuiSystem().openGUI(player, new BagGUI());
+    }
+
+    @CommandSub(length = 0, names = "debug", permissions = "talismans.debug", justPlayerUseCmd = true)
+    public void onDebug(Player player, String[] args) {
+        Logging.debug = !Logging.debug;
+    }
+
     @Nullable
     @Override
     public List<String> executeTabCompleter(@Nonnull CommandSender commandSender, @Nonnull String s, @Nonnull String[] args) {
         if (checkEqualArgs(args, 0, "give")) {
-            if (args.length == 2) {
+            if (args.length == 3) {
                 return Arrays.stream(ItemName.values()).map(ItemName::name).collect(Collectors.toList());
+            }
+        }
+
+        if (checkEqualArgs(args, 0, "bag", "status")) {
+            if (args.length == 2) {
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
             }
         }
 
@@ -89,6 +103,12 @@ public class MainCommand extends CommandManager implements Instance {
     @Override
     protected String getErrorCommandMessage() {
         return "";
+    }
+
+    private Boolean hasPermission(CommandSender sender, String permission) {
+        if (!(sender instanceof Player)) return true;
+
+        return sender.hasPermission(permission);
     }
 
 }

@@ -25,8 +25,8 @@ repositories {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT"
 
-    implementation "org.projectlombok:lombok:1.18.32"
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    implementation 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     implementation "com.github.huynhphap100:PluginSpigotTools:main-SNAPSHOT"
 }
@@ -40,9 +40,7 @@ shadowJar.configure {
 }
 
 shadowJar {
-    archiveBaseName.set('Talismans')
-    archiveClassifier.set('')
-    archiveVersion.set('')
+    exclude "META-INF"
 
     dependencies {
         include(dependency('com.vanderis:talismans:1.0-SNAPSHOT'))
@@ -50,16 +48,9 @@ shadowJar {
     }
 }
 
-publishing {
-    publications {
-        shadow(MavenPublication) { publication ->
-            groupId = 'com.vanderis'
-            artifactId = 'talismans'
-            version = '1.0-SNAPSHOT'
-
-            project.shadow.component(publication)
-        }
-    }
+tasks.register('copyJar', Copy) {
+    from shadowJar // copies output of file produced from jar task
+    into 'D:/Code Project/Minecraft Coding/TestServer/1.20.6/plugins'
 }
 
 processResources {
