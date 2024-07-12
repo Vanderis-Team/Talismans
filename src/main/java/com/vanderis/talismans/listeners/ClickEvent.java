@@ -10,7 +10,8 @@ public class ClickEvent implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        instance.getGuiSystem().onBagClick(event);
+        instance.getBagManager().onBagClick(event);
+        instance.getEditManager().onEditClick(event);
     }
 
 }

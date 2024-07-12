@@ -2,10 +2,13 @@ package com.vanderis.talismans.gui.bag;
 
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.items.*;
-import com.vanderis.talismans.utils.Logging;
+import com.vanderis.talismans.player.PlayerData;
+import com.vanderis.talismans.utils.*;
+import my.plugin.utils.XSound;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -13,69 +16,37 @@ public class BagManager {
 
     private final Talismans instance = Talismans.getInstance();
 
-    private final Map<UUID, List<ItemData>> playerBag = new HashMap<>();
-    private final Map<String, List<ItemData>> offlinePlayerBag = new HashMap<>(); // Use when admin open offline player bag
-
-    public void register() {
-        if (Bukkit.getOnlinePlayers().isEmpty())
-            return;
-
-        playerBag.clear();
-
-        for (Player player : Bukkit.getOnlinePlayers())
-            fromFileToCache(player);
-    }
-
-    public void unregister() {
-        for (UUID uuid : playerBag.keySet())
-            removeCache(uuid);
-    }
+    private final ItemManager itemManager = instance.getItemManager();
 
     public void addItem(Player player, ItemData itemData) {
-        playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).add(itemData);
+        instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().add(itemData);
 
         fromCacheToFile(player);
     }
 
     public void removeItem(Player player, ItemData itemData) {
-        playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).remove(itemData);
+        instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().remove(itemData);
 
         fromCacheToFile(player);
     }
 
     public Boolean hasItem(Player player, ItemData itemData) {
-        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).contains(itemData);
-    }
-
-    public Boolean hasCached(String playerName) {
-        if (Bukkit.getPlayer(playerName) == null) {
-            return offlinePlayerBag.containsKey(playerName);
-        }
-
-        return playerBag.containsKey(Bukkit.getPlayer(playerName).getUniqueId());
-    }
-
-    public void removeCache(Player player) {
-        removeCache(player.getUniqueId());
-    }
-
-    public void removeCache(UUID uuid) {
-        fromCacheToFile(uuid);
-
-        playerBag.remove(uuid);
+        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().contains(itemData);
     }
 
     public void fromFileToCache(Player player) {
-        List<ItemData> items = convertStringListToCacheData(instance.getFileManager().getPlayerBagItems(player));
-        playerBag.put(player.getUniqueId(), items);
+        Integer size = instance.getFileManager().getSize(player);
+        List<ItemData> items = convertStringListToCacheData(instance.getFileManager().getBagItems(player));
+        instance.getPlayerManager().playerData.put(player.getUniqueId(), new PlayerData(size, items));
 
         Logging.debug("BagGUI", "Bag owner [" + player.getName() + "] has been cached (Online).");
     }
 
     public void fromFileToCache(String playerName) {
-        List<ItemData> items = convertStringListToCacheData(instance.getFileManager().getPlayerBagItems(playerName));
+        Integer size = instance.getFileManager().getSize(playerName);
+        List<ItemData> items = convertStringListToCacheData(instance.getFileManager().getBagItems(playerName));
 
-        offlinePlayerBag.put(playerName, items);
+        instance.getPlayerManager().offlinePlayerData.put(playerName, new PlayerData(size, items));
 
         Logging.debug("BagGUI", "Bag owner [" + playerName + "] has been cached (Offline).");
     }
@@ -85,17 +56,24 @@ public class BagManager {
     }
 
     public void fromCacheToFile(UUID uuid) {
-        String playerName = Bukkit.getPlayer(uuid) == null ? Bukkit.getOfflinePlayer(uuid).getName() : Bukkit.getPlayer(uuid).getName();
+        String playerName = Bukkit.getPlayer(uuid).getName();
 
-        List<String> items = convertCacheDataToStringList(playerBag.get(uuid));
+        if (!instance.getPlayerManager().hasCached(playerName))
+            return;
 
-        instance.getFileManager().setPlayerBagItems(playerName, items);
+        Integer size = instance.getPlayerManager().playerData.get(uuid).getBagSize();
+        List<String> items = convertCacheDataToStringList(instance.getPlayerManager().playerData.get(uuid).getBagItems());
+
+        instance.getFileManager().setBagSize(playerName, size);
+        instance.getFileManager().setBagItems(playerName, items);
     }
 
     public void fromCacheToFile(String playerName) {
-        List<String> items = convertCacheDataToStringList(offlinePlayerBag.get(playerName));
+        Integer size = instance.getPlayerManager().offlinePlayerData.get(playerName).getBagSize();
+        List<String> items = convertCacheDataToStringList(instance.getPlayerManager().offlinePlayerData.get(playerName).getBagItems());
 
-        instance.getFileManager().setPlayerBagItems(playerName, items);
+        instance.getFileManager().setBagSize(playerName, size);
+        instance.getFileManager().setBagItems(playerName, items);
     }
 
     private List<ItemData> convertStringListToCacheData(List<String> items) {
@@ -121,41 +99,92 @@ public class BagManager {
     }
 
     public Boolean isBagEmpty(Player player) {
-        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).isEmpty();
+        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().isEmpty();
     }
 
     public ItemData getItem(Player player, Integer index) {
-        if (index > playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).size())
+        if (index > instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().size())
             return null;
 
-        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>()).get(index);
+        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().get(index);
     }
 
     public ItemData getItem(String playerName, Integer index) {
         UUID uuid = Bukkit.getPlayer(playerName) == null ? Bukkit.getOfflinePlayer(playerName).getUniqueId() : Bukkit.getPlayer(playerName).getUniqueId();
 
-        if (index > playerBag.getOrDefault(uuid, new ArrayList<>()).size())
+        if (index > instance.getPlayerManager().playerData.getOrDefault(uuid, new PlayerData()).getBagItems().size())
             return null;
 
-        return playerBag.getOrDefault(uuid, new ArrayList<>()).get(index);
+        return instance.getPlayerManager().playerData.getOrDefault(uuid, new PlayerData()).getBagItems().get(index);
     }
 
     public List<ItemData> getItems(Player player) {
-        return playerBag.getOrDefault(player.getUniqueId(), new ArrayList<>());
+        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems();
     }
 
     public List<ItemData> getItems(String playerName) {
-        if (Bukkit.getPlayer(playerName) == null) {
+        if (Bukkit.getPlayer(playerName) == null)
+            return instance.getPlayerManager().offlinePlayerData.getOrDefault(playerName, new PlayerData()).getBagItems();
 
-        }
+        UUID uuid = Bukkit.getPlayer(playerName).getUniqueId();
 
-        UUID uuid = Bukkit.getPlayer(playerName) == null ? Bukkit.getOfflinePlayer(playerName).getUniqueId() : Bukkit.getPlayer(playerName).getUniqueId();
-
-        return playerBag.getOrDefault(uuid, new ArrayList<>());
+        return instance.getPlayerManager().playerData.getOrDefault(uuid, new PlayerData()).getBagItems();
     }
 
-    public void onQuit(PlayerQuitEvent event) {
-        removeCache(event.getPlayer());
+    public void onBagClick(InventoryClickEvent event) {
+        if (!(event.getView().getTopInventory().getHolder() instanceof BagGUI))
+            return;
+
+        int slot = event.getRawSlot();
+        ItemStack itemPressOn = event.getCurrentItem();
+
+        Player player = (Player) event.getWhoClicked();
+        player.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_OFF.parseSound(), 20, 20);
+
+        event.setCancelled(true);
+
+        BagGUI gui = (BagGUI) instance.getGuiManager().getCacheGUI(player);
+
+        if (slot >= 0 && slot < gui.getItemsPutInGUI().size()) { // Top Inventory
+            if (gui.getType(slot) == null)
+                return;
+
+            if (gui.isType(slot, "item-slot")) { // Remove Item From Bag
+                if (isBagEmpty(player))
+                    return;
+
+                ItemData itemData = getItem(player, gui.getTypeOrder(slot, "item-slot"));
+
+                if (itemData == null)
+                    return;
+
+                removeItem(player, itemData);
+                instance.getGuiManager().updateGUI(player);
+
+                itemData.giveItemResult(player);
+            }
+
+            if (gui.isType(slot, "block-slot")) {
+                Message.sendMessage(player, Message.prefix() + " &cThis slot is blocked, please purchase new slot to open!");
+
+                player.playSound(player, XSound.BLOCK_ANVIL_LAND.parseSound(), 20, 20);
+            }
+        }
+
+        if (slot >= gui.getItemsPutInGUI().size() && slot < gui.getItemsPutInGUI().size() + 36) { // Bottom Inventory
+            Logging.log("Bottom click");
+
+            if (itemManager.getItem(itemPressOn) == null)
+                return;
+
+            ItemData itemData = itemManager.getItem(itemPressOn);
+
+            /* Add Item To Bag */
+            addItem(player, itemData);
+            instance.getGuiManager().updateGUI(player);
+
+            itemPressOn.setAmount(itemPressOn.getAmount() - 1);
+        }
     }
 
 }

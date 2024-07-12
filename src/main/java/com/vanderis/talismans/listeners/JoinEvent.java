@@ -2,15 +2,15 @@ package com.vanderis.talismans.listeners;
 
 import com.vanderis.talismans.Talismans;
 import org.bukkit.event.*;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
-public class QuitEvent implements Listener {
+public class JoinEvent implements Listener {
 
     private final Talismans instance = Talismans.getInstance();
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        instance.getPlayerManager().onQuit(event);
+    public void onJoin(PlayerJoinEvent event) {
+        instance.getPlayerManager().onJoin(event);
     }
 
 }

@@ -1,0 +1,43 @@
+title: "&c&lTalismans Edit | <talismans-id>"
+
+format:
+  - "aaaddddda"
+  - "bbbdfffda"
+  - "bcbdfffdg"
+  - "bbbdfffda"
+  - "aaaddddda"
+
+items:
+  a:
+    material: "AIR"
+  b:
+    material: "BLACK_STAINED_GLASS_PANE"
+    name: " "
+  c:
+    type: item-slot
+    material: "AIR"
+  d:
+    type: allow-crafting
+    material: "GREEN_STAINED_GLASS_PANE"
+    name: "&a&lThis talismans is allow crafting!"
+    lore:
+      - ""
+      - "&7Click here to turn off crafting."
+  e:
+    mask: d
+    type: prevent-crafting
+    material: "RED_STAINED_GLASS_PANE"
+    name: "&c&lThis talismans is prevent from crafting!"
+    lore:
+      - ""
+      - "&7Click here to turn on crafting."
+  f:
+    type: recipe
+    material: "AIR"
+  g:
+    type: close
+    material: "LIME_WOOL"
+    name: "&a&lSave & Close"
+    lore:
+      - ""
+      - "&7Click here to save and close your edit."

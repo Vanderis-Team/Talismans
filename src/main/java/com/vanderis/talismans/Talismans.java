@@ -3,12 +3,15 @@ package com.vanderis.talismans;
 import com.vanderis.talismans.gui.bag.BagManager;
 import com.vanderis.talismans.commands.MainCommand;
 import com.vanderis.talismans.files.*;
-import com.vanderis.talismans.gui.GUISystem;
+import com.vanderis.talismans.gui.GUIManager;
+import com.vanderis.talismans.gui.edit.EditManager;
 import com.vanderis.talismans.items.ItemManager;
 import com.vanderis.talismans.listeners.*;
+import com.vanderis.talismans.player.PlayerManager;
 import lombok.Getter;
 import me.orineko.pluginspigottools.CommandManager;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -16,12 +19,13 @@ public final class Talismans extends JavaPlugin {
 
     private static Talismans instance;
 
-    private PathManager pathManager;
     private FileManager fileManager;
-    private BagManager bagManager;
+    private PathManager pathManager;
+    private PlayerManager playerManager;
     private ItemManager itemManager;
-
-    private GUISystem guiSystem;
+    private GUIManager guiManager;
+    private BagManager bagManager;
+    private EditManager editManager;
 
     @Override
     public void onEnable() {
@@ -29,8 +33,6 @@ public final class Talismans extends JavaPlugin {
         saveDefaultConfig();
 
         instance = this;
-
-        registerSystems();
 
         registerManagers();
 
@@ -46,25 +48,28 @@ public final class Talismans extends JavaPlugin {
     }
 
     private void registerManagers() {
-        pathManager = new PathManager();
-        pathManager.register();
-
         fileManager = new FileManager();
         fileManager.register();
 
-        bagManager = new BagManager();
-        bagManager.register();
+        pathManager = new PathManager();
+        pathManager.register();
 
         itemManager = new ItemManager();
         itemManager.register();
+
+        guiManager = new GUIManager();
+
+        bagManager = new BagManager();
+
+        editManager = new EditManager();
+
+        playerManager = new PlayerManager();
+        playerManager.register();
     }
 
     private void unregisterManagers() {
-        bagManager.unregister();
-    }
-
-    private void registerSystems() {
-        guiSystem = new GUISystem();
+        playerManager.unregister();
+        guiManager.unregister();
     }
 
     private void registerCommands() {
@@ -72,8 +77,14 @@ public final class Talismans extends JavaPlugin {
     }
 
     private void registerEvents() {
-        Bukkit.getServer().getPluginManager().registerEvents(new ClickEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new QuitEvent(), this);
+        registerEvent(new ClickEvent());
+        registerEvent(new CloseEvent());
+        registerEvent(new JoinEvent());
+        registerEvent(new QuitEvent());
+    }
+
+    private void registerEvent(Listener listener) {
+        Bukkit.getServer().getPluginManager().registerEvents(listener, this);
     }
 
     public static Talismans getInstance() {

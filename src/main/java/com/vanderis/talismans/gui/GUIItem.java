@@ -11,15 +11,17 @@ public class GUIItem {
     private final char character;
     private final String mask;
     private final String type;
-    private final List<Integer> slotList;
     private final ItemStack itemStack;
 
     public GUIItem(char character, String mask, String type, ItemStack itemStack) {
         this.character = character;
         this.mask = mask;
         this.type = type;
-        this.slotList = new ArrayList<>();
         this.itemStack = itemStack;
+    }
+
+    public String toString() {
+        return character + " / " + mask + " / " + type;
     }
 
 }

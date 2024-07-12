@@ -10,6 +10,14 @@ import java.util.*;
 @UtilityClass
 public class Message {
 
+    public String prefix() {
+        if (Version.getServerVersion() >= 16) {
+            return Color.color("&8[#8413FBT#8B20FBa#922EFBl#993BFCi#A049FCs#A756FCm#AE64FCa#B571FDn#BC7FFDs&8]");
+        } else {
+            return Color.color("&8[&5Talismans&8]");
+        }
+    }
+
     // Message(s)
     public void sendMessages(CommandSender player, List<String> messages) {
         messages.forEach(message -> player.sendMessage(Color.color(message)));

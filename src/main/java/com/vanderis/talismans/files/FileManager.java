@@ -15,6 +15,9 @@ public class FileManager {
 
     private final Talismans instance = Talismans.getInstance();
 
+    public FileConfiguration config;
+    public FileConfiguration messages;
+
     public FileConfiguration collectionsGUI;
     public FileConfiguration bagGUI;
     public FileConfiguration editGUI;
@@ -22,6 +25,9 @@ public class FileManager {
 
     @SneakyThrows
     public void register() {
+        config = new me.orineko.pluginspigottools.FileManager("config.yml", instance).copyDefault();
+        messages = new me.orineko.pluginspigottools.FileManager("messages.yml", instance).copyDefault();
+
         collectionsGUI = new me.orineko.pluginspigottools.FileManager("gui/collections.yml", instance).copyDefault();
         bagGUI = new me.orineko.pluginspigottools.FileManager("gui/bag.yml", instance).copyDefault();
         editGUI = new me.orineko.pluginspigottools.FileManager("gui/edit.yml", instance).copyDefault();
@@ -34,24 +40,17 @@ public class FileManager {
 
         File[] talismans = folder.listFiles();
 
-        Logging.log("FileManager / levelFile: " + Arrays.toString(talismans));
-
         if (talismans == null)
             return;
 
         for (File file : talismans) {
             File[] levelFile = file.listFiles();
-            Logging.log("FileManager / file.getName(): " + file.getName());
-
-            Logging.log("FileManager / levelFile: " + Arrays.toString(levelFile));
 
             if (levelFile == null)
                 continue;
 
 
             for (File level : levelFile) {
-
-                Logging.log("FileManager / file.getName(): " + level.getName());
 
                 new me.orineko.pluginspigottools.FileManager("talismans/" + file.getName() + "/" + level.getName(), instance).copyDefault();
 
@@ -88,48 +87,85 @@ public class FileManager {
     }
 
     @SneakyThrows
-    public File getPlayerBagFile(Player player) {
-        return getPlayerBagFile(player.getName());
+    public File getPlayerFile(Player player) {
+        return getPlayerFile(player.getName());
     }
 
     @SneakyThrows
-    public File getPlayerBagFile(String playerName) {
-        File file = new File(instance.getDataFolder() + "/bag/" + playerName + ".yml");
-        if (!file.exists()) {
+    public File getPlayerFile(String playerName) {
+        File folder = new File(Talismans.getInstance().getDataFolder() + "\\playerdata");
+        if (!folder.exists()) folder.mkdirs();
+
+        File file = new File(instance.getDataFolder() + "\\playerdata\\" + playerName + ".yml");
+        if (!isDataExist(playerName)) {
             file.createNewFile();
 
             YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-            yml.set("items", new ArrayList<>());
+            yml.set("bag-size", PathManager.DEFAULT_BAG_SIZE);
+            yml.set("bag-items", new ArrayList<>());
             yml.save(file);
         }
 
         return file;
     }
 
-    public List<String> getPlayerBagItems(Player player) {
-        return getPlayerBagItems(player.getName());
+    public Boolean isDataExist(String playerName) {
+        File file = new File(instance.getDataFolder() + "\\playerdata\\" + playerName + ".yml");
+
+        return file.exists();
     }
 
-    public List<String> getPlayerBagItems(String playerName) {
-        File file = getPlayerBagFile(playerName);
+    public List<String> getBagItems(Player player) {
+        return getBagItems(player.getName());
+    }
+
+    public List<String> getBagItems(String playerName) {
+        File file = getPlayerFile(playerName);
 
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
 
-        return yml.getStringList("items");
+        return yml.getStringList("bag-items");
     }
 
-    @SneakyThrows
-    public void setPlayerBagItems(Player player, List<String> items) {
-        setPlayerBagItems(player.getName(), items);
+    public Integer getSize(Player player) {
+        return getSize(player.getName());
     }
 
-    @SneakyThrows
-    public void setPlayerBagItems(String playerName, List<String> items) {
-        File file = getPlayerBagFile(playerName);
+    public Integer getSize(String playerName) {
+        File file = getPlayerFile(playerName);
 
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
 
-        yml.set("items", items);
+        return yml.getInt("bag-size");
+    }
+
+    @SneakyThrows
+    public void setBagItems(Player player, List<String> items) {
+        setBagItems(player.getName(), items);
+    }
+
+    @SneakyThrows
+    public void setBagItems(String playerName, List<String> items) {
+        File file = getPlayerFile(playerName);
+
+        YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
+
+        yml.set("bag-items", items);
+        yml.save(file);
+    }
+
+    @SneakyThrows
+    public void setBagSize(Player player, Integer size) {
+        setBagSize(player.getName(), size);
+    }
+
+    @SneakyThrows
+    public void setBagSize(String playerName, Integer size) {
+        File file = getPlayerFile(playerName);
+
+        YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
+
+        yml.set("bag-size", size);
         yml.save(file);
     }
 

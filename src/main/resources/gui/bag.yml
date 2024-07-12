@@ -1,32 +1,22 @@
-title: "&c&lTalismans Bag"
+title: "&5&lTalismans Bag"
 
 format:
   - "aaaaaaaaa"
-  - "addddddda"
-  - "addddddda"
-  - "addddddda"
-  - "addddddda"
+  - "abbbbbbba"
+  - "abbbbbbba"
+  - "abbbbbbba"
+  - "abbbbbbba"
   - "aaaaaaaaa"
 
 items:
   a:
     material: "GRAY_STAINED_GLASS_PANE"
     name: "&7Put your talismans into empty slot!"
-  b: # This item is NOT required, you can remove it
-    mask: a
-    type: bag-full
-    material: "RED_STAINED_GLASS_PANE"
-    name: "&cThe talismans bag is full!"
-  c: # This item is NOT required, you can remove it
-    mask: a
-    type: bag-renew
-    material: "GREEN_STAINED_GLASS_PANE"
-    name: "&aFound new talisman, please close the bag to apply the effects!"
-  d:
+  b:
     type: item-slot
     material: "AIR"
-  e:
-    mask: d
+  c:
+    mask: b
     type: block-slot
     material: "BLACK_STAINED_GLASS_PANE"
     name: "&c&lThis slot is blocked!"

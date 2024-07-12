@@ -21,6 +21,8 @@ public abstract class GUIHolder implements InventoryHolder {
     protected Player viewer;
     protected Inventory inventory;
 
+    protected String formatString;
+
     public GUIHolder(FileConfiguration fileConfiguration) {
         this.fileConfiguration = fileConfiguration;
 
@@ -42,14 +44,11 @@ public abstract class GUIHolder implements InventoryHolder {
     }
 
     public boolean updateInventory() {
-        return updateInventory(null);
-    }
-
-    public boolean updateInventory(List<String> guiItemTypeUpdate) {
         List<String> format = this.fileConfiguration.getStringList("format");
 
         this.inventory.clear();
         this.items.clear();
+        this.itemsPutInGUI.clear();
 
         format = format.stream().map(StringBuilder::new).map(s -> {
             if (s.length() > 9) return s.substring(0, 8);
@@ -57,7 +56,7 @@ public abstract class GUIHolder implements InventoryHolder {
             return s;
         }).map(Object::toString).collect(Collectors.toList());
 
-        String formatString = String.join("", format);
+        formatString = String.join("", format);
 
         ConfigurationSection sectionItem = this.fileConfiguration.getConfigurationSection("items");
 
@@ -66,8 +65,6 @@ public abstract class GUIHolder implements InventoryHolder {
 
         sectionItem.getKeys(false).forEach(sec -> {
             char character = sec.charAt(0);
-            if (!formatString.contains(String.valueOf(character)))
-                return;
 
             String mask = this.fileConfiguration.getString("items." + character + ".mask");
             String type = this.fileConfiguration.getString("items." + character + ".type");
@@ -79,32 +76,10 @@ public abstract class GUIHolder implements InventoryHolder {
         });
 
         for (int i = 0; i < formatString.length(); i++) {
-            boolean overrideItem = false;
-
-            if (guiItemTypeUpdate != null) {
-                for (String type : guiItemTypeUpdate) {
-                    GUIItem guiItem = getGUIItem(type);
-                    if (guiItem == null || guiItem.getMask() == null) continue;
-
-                    if (guiItem.getMask().charAt(0) == formatString.charAt(i)) {
-                        guiItem.getSlotList().add(i);
-                        this.inventory.setItem(i, guiItem.getItemStack());
-                        this.itemsPutInGUI.add(guiItem);
-
-                        overrideItem = true;
-
-                        break;
-                    }
-                }
-            }
-
-            if (overrideItem)
-                continue;
 
             GUIItem guiItem = getGUIItem(formatString.charAt(i));
             if (guiItem == null) continue;
 
-            guiItem.getSlotList().add(i);
             this.inventory.setItem(i, guiItem.getItemStack());
             this.itemsPutInGUI.add(guiItem);
         }
@@ -119,7 +94,8 @@ public abstract class GUIHolder implements InventoryHolder {
 
     @Nullable
     public GUIItem getGUIItem(String type) {
-        return items.stream().filter(i -> i.getType().equalsIgnoreCase(type)).findAny().orElse(null);
+
+        return items.stream().filter(i -> i.getType() != null).filter(i -> i.getType().equalsIgnoreCase(type)).findAny().orElse(null);
     }
 
     public String getType(Integer slot) {
@@ -127,6 +103,9 @@ public abstract class GUIHolder implements InventoryHolder {
     }
 
     public Boolean isType(Integer slot, String type) {
+        if (getType(slot) == null)
+            return false;
+
         return getType(slot).equalsIgnoreCase(type);
     }
 
@@ -136,6 +115,9 @@ public abstract class GUIHolder implements InventoryHolder {
         for (int i = 0; i < itemsPutInGUI.size(); i++) {
             GUIItem item = itemsPutInGUI.get(i);
 
+            if (item.getType() == null)
+                continue;
+
             if (item.getType().equalsIgnoreCase(type))
                 order++;
 
@@ -144,6 +126,28 @@ public abstract class GUIHolder implements InventoryHolder {
         }
 
         return order;
+    }
+
+    public void setItem(int slot) {
+        GUIItem guiItem = getGUIItem(formatString.charAt(slot));
+
+        if (guiItem == null)
+            return;
+
+        this.inventory.setItem(slot, guiItem.getItemStack());
+        this.itemsPutInGUI.set(slot, guiItem);
+    }
+
+    public void setMaskItem(int slot, String type) {
+        GUIItem guiItem = getGUIItem(type);
+
+         if (guiItem == null)
+             return;
+
+        if (guiItem.getMask().charAt(0) == formatString.charAt(slot)) {
+            this.inventory.setItem(slot, guiItem.getItemStack());
+            this.itemsPutInGUI.set(slot, guiItem);
+        }
     }
 
     @Override
