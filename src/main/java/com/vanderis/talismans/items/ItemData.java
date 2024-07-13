@@ -1,14 +1,15 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.utils.Logging;
 import lombok.*;
 import me.orineko.pluginspigottools.FileManager;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 
 import java.util.*;
 
@@ -18,6 +19,7 @@ public abstract class ItemData implements Listener {
 
     protected ItemName id;
     protected Integer level;
+
     protected FileManager fileManager;
     protected ItemStack itemResult;
     protected Boolean craftable;
@@ -32,6 +34,7 @@ public abstract class ItemData implements Listener {
         fileManager.createFolder("talismans", id.name().toLowerCase());
         fileManager.createFile();
 
+        this.itemResult = fileManager.getItemStack("item-result");
         this.craftable = fileManager.getBoolean("craftable", false);
 
         this.recipe = new ArrayList<>();
@@ -62,16 +65,31 @@ public abstract class ItemData implements Listener {
         player.getInventory().addItem(itemResult);
     }
 
+    public void toggleCraftable() {
+        this.craftable = !this.craftable;
+    }
+
     public void saveToFile() {
         fileManager.set("item-result", itemResult);
         fileManager.set("craftable", craftable);
 
-        for (int i = 1; i <= 9; i++)
+        for (int i = 1; i <= recipe.size(); i++) {
+            Logging.log("ItemData: " + i);
+
             fileManager.set("recipe." + i, recipe.get(i - 1));
+        }
 
         fileManager.set("values", values);
 
         fileManager.save();
+
+        renewItemToCache();
+    }
+
+    private void renewItemToCache() {
+        Talismans.getInstance().getItemManager().removeItemFromCache(this);
+
+        Talismans.getInstance().getFileManager().load(this);
     }
 
 }

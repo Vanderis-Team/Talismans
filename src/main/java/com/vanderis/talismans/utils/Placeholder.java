@@ -11,17 +11,17 @@ public class Placeholder {
     /**
      * Use when want to replace every placeholder, one by one, without knowing what placeholder name.
      * <p><p>
-     * Easier to say it will find {}, what is in that bracket doesn't matter, it will simply replace the value you give it.<p>
+     * Easier to say it will find <>, what is in that bracket doesn't matter, it will simply replace the value you give it.<p>
      * After replacing one, it will continue with the next one with the next value.
      * <p><p>
-     * Ex: String ex = "I have {burgur} and {coke}, I {love} it."<p>
+     * Ex: String ex = "I have <burgur> and <coke>, I <love> it."<p>
      * String result = Placeholder.replacePlaceholders(ex, "tissue", "water", "hate");<p>
      * -> I have tissue and water, I hate it.
      * */
     public static String replacePlaceholders(String original, String... values) {
         List<String> replacements = Arrays.asList(values);
 
-        String pattern = "\\{([^}]*)}";
+        String pattern = "<([^>]*)>";
         Pattern regex = Pattern.compile(pattern);
 
         StringBuilder sb = new StringBuilder();

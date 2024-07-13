@@ -1,4 +1,4 @@
-title: "&c&lTalismans Edit | <talismans-id>"
+title: "&c&lTalismans Edit | &8<talismans-id> <talismans-level>"
 
 format:
   - "aaaddddda"
@@ -11,6 +11,7 @@ items:
   a:
     material: "AIR"
   b:
+    type: item-border
     material: "BLACK_STAINED_GLASS_PANE"
     name: " "
   c:

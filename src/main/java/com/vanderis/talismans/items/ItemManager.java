@@ -1,6 +1,7 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.utils.Logging;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,7 +15,18 @@ public class ItemManager {
     public List<ItemData> itemList = new ArrayList<>();
 
     public void register() {
+        itemList.clear();
+
         instance.getFileManager().loadItems();
+    }
+
+    public void removeItemFromCache(ItemData itemData) {
+        Logging.log("ItemManager: before -> " + itemList);
+
+        itemList = itemList.stream()
+                .filter(cache -> cache.getId().equals(itemData.getId()) && cache.getLevel().equals(itemData.level)).toList();
+
+        Logging.log("ItemManager: after -> " + itemList);
     }
 
     public Boolean hasItem(Player player, ItemData itemData) {
@@ -30,6 +42,9 @@ public class ItemManager {
 
     public ItemData getItem(ItemStack itemStack) {
         for (ItemData itemData : itemList) {
+            if (itemData.getItemResult() == null)
+                continue;
+
             if (itemData.getItemResult().isSimilar(itemStack))
                 return itemData;
         }

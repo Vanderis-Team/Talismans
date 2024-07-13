@@ -27,25 +27,28 @@ public class EditManager {
             if (gui.getType(slot) == null)
                 return;
 
+            if (gui.isType(slot, "item-border"))
+                event.setCancelled(true);
+
             if (gui.isType(slot, "allow-crafting") ||
                     gui.isType(slot, "prevent-crafting")) {
 
                 event.setCancelled(true);
 
-                gui.getItemData().setCraftable(!gui.getItemData().getCraftable());
+                gui.getItemData().toggleCraftable();
 
                 if (gui.getItemData().getCraftable())
                     Message.sendMessage(player, Message.prefix() + " &aCraftable Enabled!");
                 else
                     Message.sendMessage(player, Message.prefix() + " &cCraftable Disabled!");
 
-                gui.maskCraftable();
+                gui.replaceCraftableIcon();
             }
 
             if (gui.isType(slot, "close")) {
                 event.setCancelled(true);
 
-                player.closeInventory();
+                player.closeInventory(); // Close gui will automatically save the item in the onEditClose() method
             }
         }
     }
@@ -63,23 +66,19 @@ public class EditManager {
     }
 
     private void saveItem(Player player, EditGUI gui) {
+        gui.getItemData().setRecipe(new ArrayList<>());
+
         for (int i = 0; i < gui.getItemsPutInGUI().size(); i++) {
 
             if (gui.isType(i, "item-slot")) {
                 gui.getItemData().setItemResult(player.getOpenInventory().getTopInventory().getItem(i));
             }
 
-            if (gui.isType(i, "allow-crafting")) {
-                gui.getItemData().setCraftable(true);
-            }
-
-            if (gui.isType(i, "prevent-crafting")) {
-                gui.getItemData().setCraftable(false);
+            if (gui.isType(i, "allow-crafting") || gui.isType(i, "prevent-crafting")) {
+                gui.getItemData().toggleCraftable();
             }
 
             if (gui.isType(i, "recipe")) {
-                gui.getItemData().setRecipe(new ArrayList<>());
-
                 gui.getItemData().getRecipe().add(player.getOpenInventory().getTopInventory().getItem(i));
             }
 

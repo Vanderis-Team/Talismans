@@ -5,7 +5,7 @@ import com.vanderis.talismans.gui.*;
 import com.vanderis.talismans.items.ItemData;
 import com.vanderis.talismans.utils.*;
 import lombok.Getter;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.*;
 
 @Getter
 public class EditGUI extends GUIHolder {
@@ -21,16 +21,21 @@ public class EditGUI extends GUIHolder {
     }
 
     @Override
+    public void openInventory(Player player) {
+        super.openInventory(player);
+
+        player.getOpenInventory().setTitle(Placeholder.replacePlaceholders(player.getOpenInventory().getTitle(), itemData.getId().toString(), itemData.getLevel().toString()));
+    }
+
+    @Override
     public boolean updateInventory() {
         super.updateInventory();
 
-        for (HumanEntity inventoryViewer : inventory.getViewers()) {
-            inventoryViewer.getOpenInventory().setTitle(Placeholder.replacePlaceholder(inventoryViewer.getOpenInventory().getTitle(), "<talismans-id>", itemData.getId().toString()));
-        }
-
-        int recipeOrder = 0;
+        int recipeOrder = -1;
 
         for (int i = 0; i < itemsPutInGUI.size(); i++) {
+
+            maskCraftable(i);
 
             if (isType(i, "item-slot")) {
                 if (itemData.getItemResult() == null)
@@ -40,7 +45,7 @@ public class EditGUI extends GUIHolder {
             }
 
             if (isType(i, "recipe")) {
-                if (itemData.getRecipe().isEmpty())
+                if (itemData.getRecipe().isEmpty() || itemData.getRecipe().size() < recipeOrder)
                     continue;
 
                 inventory.setItem(i, itemData.getRecipe().get(++recipeOrder));
@@ -51,16 +56,21 @@ public class EditGUI extends GUIHolder {
         return true;
     }
 
-    public void maskCraftable() {
+    public void replaceCraftableIcon() {
         for (int i = 0; i < itemsPutInGUI.size(); i++) {
 
-            if (itemData.getCraftable()) {
-                if (isType(i, "prevent-crafting"))
-                    setItem(i);
-            }
-            else
-                setMaskItem(i, "prevent-crafting");
+            maskCraftable(i);
 
         }
     }
+
+    private void maskCraftable(int slot) {
+        if (itemData.getCraftable()) {
+            if (isType(slot, "prevent-crafting"))
+                setItem(slot);
+        }
+        else
+            setMaskItem(slot, "prevent-crafting");
+    }
+
 }

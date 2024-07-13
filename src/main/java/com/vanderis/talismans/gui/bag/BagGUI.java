@@ -23,6 +23,8 @@ public class BagGUI extends GUIHolder {
     public boolean updateInventory() {
         super.updateInventory();
 
+        Integer itemOrder = 0;
+
         for (int i = 0; i < itemsPutInGUI.size(); i++) {
             if (isType(i, "item-slot")) {
                 if (getTypeOrder(i, "item-slot") + 1 > playerManager.getPlayerData(bagOwner).getBagSize()) {
@@ -44,7 +46,10 @@ public class BagGUI extends GUIHolder {
                         bagManager.fromFileToCache(bagOwner);
                     }
 
-                    this.inventory.setItem(i, bagManager.getItem(bagOwner, i).getItemResult());
+                    if (bagManager.getItem(bagOwner, itemOrder) == null)
+                        continue;
+
+                    this.inventory.setItem(i, bagManager.getItem(bagOwner, itemOrder++).getItemResult());
 
                     continue;
                 }
@@ -55,7 +60,10 @@ public class BagGUI extends GUIHolder {
                     continue;
                 }
 
-                this.inventory.setItem(i, bagManager.getItem(viewer, i).getItemResult());
+                if (bagManager.getItem(viewer, itemOrder) == null)
+                    continue;
+
+                this.inventory.setItem(i, bagManager.getItem(viewer, itemOrder++).getItemResult());
             }
         }
 
