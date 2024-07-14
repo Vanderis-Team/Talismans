@@ -39,8 +39,6 @@ public abstract class GUIHolder implements InventoryHolder {
         this.viewer = player;
 
         player.openInventory(inventory);
-
-        updateInventory();
     }
 
     public boolean updateInventory() {
@@ -126,6 +124,20 @@ public abstract class GUIHolder implements InventoryHolder {
         }
 
         return order;
+    }
+
+    public Integer getAmountOfType(String type) {
+        Integer amount = 0;
+
+        for (GUIItem item : itemsPutInGUI) {
+            if (item.getType() == null)
+                continue;
+
+            if (item.getType().equalsIgnoreCase(type))
+                amount++;
+        }
+
+        return amount;
     }
 
     public void setItem(int slot) {

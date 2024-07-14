@@ -57,6 +57,7 @@ public class PathManager {
                 " &5/talismans give <player> <name> <level>&f: Give talismans to player.",
                 " &5/talismans bag [player]&f: Open talismans bag.",
                 " &5/talismans edit <id> <level>&f: Edit talismans.",
+                " &5/talismans collections&f: Talismans list.",
                 " &5/talismans status [player]&f: Show active talismans on player.",
                 " &5/talismans debug&f: Debug the plugin."
         ));

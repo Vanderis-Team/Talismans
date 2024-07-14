@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class StrengthenBow extends ItemData {
 
-    public StrengthenBow(ItemName itemName, Integer level) {
-        super(itemName, level);
+    public StrengthenBow(Integer level) {
+        super(ItemName.STRENGTHEN_BOW, level);
     }
 
     @EventHandler

@@ -1,0 +1,28 @@
+title: "&5&lTalismans Crafting Table"
+
+format:
+  - "bdddddbbb"
+  - "bdaaadeee"
+  - "bdaaadece"
+  - "bdaaadeee"
+  - "bdddddbbb"
+
+items:
+  a:
+    type: recipe-slot
+    material: "AIR"
+  b:
+    type: border
+    material: "BLACK_STAINED_GLASS_PANE"
+    name: " "
+  c:
+    type: result-slot
+    material: "AIR"
+  d:
+    type: recipe-border
+    material: "WHITE_STAINED_GLASS_PANE"
+    name: " "
+  e:
+    type: result-border
+    material: "GREEN_STAINED_GLASS_PANE"
+    name: " "

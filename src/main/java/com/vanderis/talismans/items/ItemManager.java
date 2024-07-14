@@ -1,6 +1,7 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.items.talismans.FlameRelic;
 import com.vanderis.talismans.utils.Logging;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,12 +22,9 @@ public class ItemManager {
     }
 
     public void removeItemFromCache(ItemData itemData) {
-        Logging.log("ItemManager: before -> " + itemList);
 
         itemList = itemList.stream()
                 .filter(cache -> cache.getId().equals(itemData.getId()) && cache.getLevel().equals(itemData.level)).toList();
-
-        Logging.log("ItemManager: after -> " + itemList);
     }
 
     public Boolean hasItem(Player player, ItemData itemData) {
@@ -46,6 +44,18 @@ public class ItemManager {
                 continue;
 
             if (itemData.getItemResult().isSimilar(itemStack))
+                return itemData;
+        }
+
+        return null;
+    }
+
+    public ItemData getItem(List<ItemStack> recipe) {
+        for (ItemData itemData : itemList) {
+            if (itemData.getItemResult() == null)
+                continue;
+
+            if (itemData.isRecipeValid() && itemData.getRecipe().equals(recipe) && itemData.isCraftable())
                 return itemData;
         }
 

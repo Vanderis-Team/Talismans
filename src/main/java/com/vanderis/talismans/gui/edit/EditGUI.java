@@ -24,7 +24,7 @@ public class EditGUI extends GUIHolder {
     public void openInventory(Player player) {
         super.openInventory(player);
 
-        player.getOpenInventory().setTitle(Placeholder.replacePlaceholders(player.getOpenInventory().getTitle(), itemData.getId().toString(), itemData.getLevel().toString()));
+        player.getOpenInventory().setTitle(Placeholder.replacePlaceholders(Color.color(fileConfiguration.getString("title")), itemData.getId().toString(), itemData.getLevel().toString()));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class EditGUI extends GUIHolder {
     }
 
     private void maskCraftable(int slot) {
-        if (itemData.getCraftable()) {
+        if (itemData.isCraftable()) {
             if (isType(slot, "prevent-crafting"))
                 setItem(slot);
         }

@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class FlameRelic extends ItemData {
 
-    public FlameRelic(ItemName itemName, Integer level) {
-        super(itemName, level);
+    public FlameRelic(Integer level) {
+        super(ItemName.FLAME_RELIC, level);
     }
 
     @EventHandler

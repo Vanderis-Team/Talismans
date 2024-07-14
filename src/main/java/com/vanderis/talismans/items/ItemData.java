@@ -1,6 +1,7 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.utils.Color;
 import com.vanderis.talismans.utils.Logging;
 import lombok.*;
 import me.orineko.pluginspigottools.FileManager;
@@ -22,7 +23,7 @@ public abstract class ItemData implements Listener {
 
     protected FileManager fileManager;
     protected ItemStack itemResult;
-    protected Boolean craftable;
+    protected boolean craftable;
     protected List<ItemStack> recipe;
     protected Map<String, String> values = new HashMap<>();
 
@@ -30,21 +31,15 @@ public abstract class ItemData implements Listener {
         this.id = id;
         this.level = level;
 
-        fileManager = new FileManager(level + ".yml", Talismans.getInstance());
-        fileManager.createFolder("talismans", id.name().toLowerCase());
-        fileManager.createFile();
-
-        this.itemResult = fileManager.getItemStack("item-result");
-        this.craftable = fileManager.getBoolean("craftable", false);
-
-        this.recipe = new ArrayList<>();
-
-        for (int i = 1; i <= 9; i++)
-            recipe.add(fileManager.getItemStack("recipe." + i));
-
-        getValueFile(fileManager);
+        renewItemToCache();
 
         Bukkit.getServer().getPluginManager().registerEvents(this, Talismans.getInstance());
+    }
+
+    public String getName() {
+        return itemResult == null ?
+                Color.color("&e" + id + ":" + level) : Color.color(itemResult.getItemMeta().getDisplayName().matches("\\s*") ?
+                Color.color("&e" + id + ":" + level) : itemResult.getItemMeta().getDisplayName());
     }
 
     public Integer getValueAsInt(String key) {
@@ -69,15 +64,25 @@ public abstract class ItemData implements Listener {
         this.craftable = !this.craftable;
     }
 
+    public boolean isRecipeValid() {
+        boolean valid = false;
+
+        for (ItemStack recipe : recipe) {
+            if (recipe != null) {
+                valid = true;
+                break;
+            }
+        }
+
+        return valid;
+    }
+
     public void saveToFile() {
         fileManager.set("item-result", itemResult);
         fileManager.set("craftable", craftable);
 
-        for (int i = 1; i <= recipe.size(); i++) {
-            Logging.log("ItemData: " + i);
-
+        for (int i = 1; i <= recipe.size(); i++)
             fileManager.set("recipe." + i, recipe.get(i - 1));
-        }
 
         fileManager.set("values", values);
 
@@ -87,9 +92,23 @@ public abstract class ItemData implements Listener {
     }
 
     private void renewItemToCache() {
-        Talismans.getInstance().getItemManager().removeItemFromCache(this);
+        fileManager = new FileManager(level + ".yml", Talismans.getInstance());
+        fileManager.createFolder("talismans", id.name().toLowerCase());
+        fileManager.createFile();
 
-        Talismans.getInstance().getFileManager().load(this);
+        this.itemResult = fileManager.getItemStack("item-result");
+        this.craftable = fileManager.getBoolean("craftable", false);
+
+        this.recipe = new ArrayList<>();
+
+        for (int i = 1; i <= 9; i++)
+            recipe.add(fileManager.getItemStack("recipe." + i));
+
+        getValueFile(fileManager);
+    }
+
+    public String toString() {
+        return id.name() + ":" + level + ":" + itemResult;
     }
 
 }

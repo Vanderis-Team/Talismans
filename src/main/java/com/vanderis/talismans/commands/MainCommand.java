@@ -3,11 +3,14 @@ package com.vanderis.talismans.commands;
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.gui.bag.BagGUI;
+import com.vanderis.talismans.gui.collections.CollectionsGUI;
+import com.vanderis.talismans.gui.crafting.CraftingGUI;
 import com.vanderis.talismans.gui.edit.EditGUI;
-import com.vanderis.talismans.items.ItemName;
+import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.utils.*;
 import lombok.SneakyThrows;
 import me.orineko.pluginspigottools.CommandManager;
+import my.plugin.utils.XSound;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,12 +62,46 @@ public class MainCommand extends CommandManager {
         Logging.debug("Give Command", "Args Length: " + args.length);
 
         if (args.length == 4) {
+            String targetName = args[1];
             ItemName itemName = ItemName.valueOf(args[2].toUpperCase());
             Integer level = Integer.valueOf(args[3]);
 
+            Player target = findPlayerOnline(targetName, player, Color.color(Message.prefix() + " &cThat player is not online!"));
+
+            if (target == null) {
+                player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 1);
+
+                return;
+            }
+
             Logging.debug("Give Command", "TalismansName/Level: " + itemName + "/" + level);
 
+            ItemData itemData = instance.getItemManager().getItem(itemName, level);
+
+            if (itemData == null) {
+                Message.sendMessage(player, Message.prefix() + " &cCannot find &e" + itemName + ":" + level + " &cin database!");
+
+                player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 1);
+
+                return;
+            }
+
+            if (itemData.getItemResult() == null) {
+                Message.sendMessage(player, Message.prefix() + " &e" + itemName + ":" + level + " &chas no item stand for it!");
+                Message.sendMessage(player, Message.prefix() + " &fPlease do &e/talismans edit " + itemName + " " + level + " &fto edit the talisman.");
+
+                player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 1);
+
+                return;
+            }
+
             instance.getItemManager().getItem(itemName, level).giveItemResult(player);
+
+            if (player.getName().equalsIgnoreCase(targetName)) {
+                Message.sendMessage(player, Message.prefix() + " &aYou just give &e" + itemName + ":" + level + " &ato &fyourself&a.");
+            } else {
+                Message.sendMessage(player, Message.prefix() + " &aYou just give &e" + itemName + ":" + level + " &ato &f" + target.getName() + "&a.");
+            }
 
             Logging.debug("Give Command", "ItemResult: " + instance.getItemManager().getItem(itemName, level).getItemResult());
         }
@@ -91,7 +128,17 @@ public class MainCommand extends CommandManager {
         }
     }
 
-    @CommandSub(length = 0, names = "status", permissions = "talismans.bag", justPlayerUseCmd = true)
+    @CommandSub(length = 0, names = "collections", permissions = "talismans.collections", justPlayerUseCmd = true)
+    public void onCollections(Player player, String[] args) {
+        instance.getGuiManager().openGUI(player, new CollectionsGUI());
+    }
+
+    @CommandSub(length = 0, names = "crafting", permissions = "talismans.crafting", justPlayerUseCmd = true)
+    public void onCrafting(Player player, String[] args) {
+        instance.getGuiManager().openGUI(player, new CraftingGUI());
+    }
+
+    @CommandSub(length = 0, names = "status", permissions = "talismans.status", justPlayerUseCmd = true)
     public void onStatus(Player player, String[] args) {
 
     }

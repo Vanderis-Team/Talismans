@@ -57,28 +57,33 @@ public class FileManager {
                 Integer talismanLevel = Integer.parseInt(level.getName().replace(".yml", ""));
 
                 ItemName id = ItemName.valueOf(file.getName().toUpperCase());
-                switch (id) { // TODO: Something better
-                    case STRENGTHEN_WEAPON:
-                        load(new StrengthenWeapon(id, talismanLevel));
-                        break;
-                    case STRENGTHEN_MELEE:
-                        load(new StrengthenMelee(id, talismanLevel));
-                        break;
-                    case STRENGTHEN_BOW:
-                        load(new StrengthenBow(id, talismanLevel));
-                        break;
-                    case STRENGTHEN_SWORD:
-                        load(new StrengthenSword(id, talismanLevel));
-                        break;
-                    case FLAME_RELIC:
-                        load(new FlameRelic(id, talismanLevel));
-                        break;
-                    default:
-                        break;
-                }
+
+                loadItemsFromID(id, talismanLevel);
             }
 
 
+        }
+    }
+
+    public void loadItemsFromID(ItemName id, Integer level) {
+        switch (id) { // TODO: Something better
+            case STRENGTHEN_WEAPON:
+                load(new StrengthenWeapon(level));
+                break;
+            case STRENGTHEN_MELEE:
+                load(new StrengthenMelee(level));
+                break;
+            case STRENGTHEN_BOW:
+                load(new StrengthenBow(level));
+                break;
+            case STRENGTHEN_SWORD:
+                load(new StrengthenSword(level));
+                break;
+            case FLAME_RELIC:
+                load(new FlameRelic(level));
+                break;
+            default:
+                break;
         }
     }
 

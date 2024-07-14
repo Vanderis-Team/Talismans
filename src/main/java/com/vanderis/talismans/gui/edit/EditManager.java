@@ -23,7 +23,7 @@ public class EditManager {
 
         EditGUI gui = (EditGUI) instance.getGuiManager().getCacheGUI(player);
 
-        if (slot >= 0 && slot < gui.getItemsPutInGUI().size()) { // Top Inventory
+        if (slot >= 0 && slot < gui.getItemsPutInGUI().size()) {
             if (gui.getType(slot) == null)
                 return;
 
@@ -37,7 +37,7 @@ public class EditManager {
 
                 gui.getItemData().toggleCraftable();
 
-                if (gui.getItemData().getCraftable())
+                if (gui.getItemData().isCraftable())
                     Message.sendMessage(player, Message.prefix() + " &aCraftable Enabled!");
                 else
                     Message.sendMessage(player, Message.prefix() + " &cCraftable Disabled!");

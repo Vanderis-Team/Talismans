@@ -4,6 +4,8 @@ import com.vanderis.talismans.gui.bag.BagManager;
 import com.vanderis.talismans.commands.MainCommand;
 import com.vanderis.talismans.files.*;
 import com.vanderis.talismans.gui.GUIManager;
+import com.vanderis.talismans.gui.collections.CollectionsManager;
+import com.vanderis.talismans.gui.crafting.CraftingManager;
 import com.vanderis.talismans.gui.edit.EditManager;
 import com.vanderis.talismans.items.ItemManager;
 import com.vanderis.talismans.listeners.*;
@@ -26,6 +28,8 @@ public final class Talismans extends JavaPlugin {
     private GUIManager guiManager;
     private BagManager bagManager;
     private EditManager editManager;
+    private CollectionsManager collectionsManager;
+    private CraftingManager craftingManager;
 
     @Override
     public void onEnable() {
@@ -62,6 +66,10 @@ public final class Talismans extends JavaPlugin {
         bagManager = new BagManager();
 
         editManager = new EditManager();
+
+        collectionsManager = new CollectionsManager();
+
+        craftingManager = new CraftingManager();
 
         playerManager = new PlayerManager();
         playerManager.register();

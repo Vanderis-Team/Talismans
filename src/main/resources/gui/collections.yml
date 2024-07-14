@@ -1,0 +1,32 @@
+title: "&5&lTalismans Collections | &8Page <current-page>/<max-page>"
+
+format:
+  - "aaaaaaaaa"
+  - "aaaaaaaaa"
+  - "aaaaaaaaa"
+  - "aaaaaaaaa"
+  - "aaaaaaaaa"
+  - "bbbdbcbbb"
+
+items:
+  a:
+    type: item-slot
+    material: "AIR"
+  b:
+    type: item-border
+    material: "BLACK_STAINED_GLASS_PANE"
+    name: " "
+  c:
+    type: next-page
+    material: "WHITE_STAINED_GLASS_PANE"
+    name: "&a&lGo to next page!"
+    lore:
+      - ""
+      - "&7Click here to go to next page."
+  d:
+    type: previous-page
+    material: "WHITE_STAINED_GLASS_PANE"
+    name: "&a&lGo to previous page!"
+    lore:
+      - ""
+      - "&7Click here to go to previous page."

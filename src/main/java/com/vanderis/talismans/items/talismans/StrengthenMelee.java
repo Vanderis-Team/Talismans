@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class StrengthenMelee extends ItemData {
 
-    public StrengthenMelee(ItemName itemName, Integer level) {
-        super(itemName, level);
+    public StrengthenMelee(Integer level) {
+        super(ItemName.STRENGTHEN_MELEE, level);
     }
 
     @EventHandler

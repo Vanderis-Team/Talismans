@@ -165,7 +165,7 @@ public class BagManager {
 
                 itemData.giveItemResult(player);
 
-                Message.sendMessage(player, Message.prefix() + " &aYou just remove &e" + itemData.getId().name() + ":" + itemData.getLevel() + " &aout of your bag!");
+                Message.sendMessage(player, Message.prefix() + " &aYou just remove " + itemData.getName() + " &aout of your bag!");
             }
 
             if (gui.isType(slot, "block-slot")) {
@@ -177,7 +177,7 @@ public class BagManager {
 
         if (slot >= gui.getItemsPutInGUI().size() && slot < gui.getItemsPutInGUI().size() + 36) { // Bottom Inventory
             if (itemManager.getItem(itemPressOn) == null) {
-                Message.sendMessage(player, Message.prefix() + " &cThat item is not a talisman's.");
+                Message.sendMessage(player, Message.prefix() + " &cThat item is not a talisman.");
 
                 player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 10);
 
