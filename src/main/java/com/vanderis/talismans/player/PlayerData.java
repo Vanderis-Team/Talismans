@@ -1,20 +1,30 @@
 package com.vanderis.talismans.player;
 
+import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.items.ItemData;
 import lombok.Getter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
 @Getter
 public class PlayerData {
 
+    private Player player;
     private Integer bagSize;
-    private List<ItemData> bagItems;
+    private List<ItemData> bagItems = new ArrayList<>();
+    private final List<ItemData> inventoryCache = new ArrayList<>();
+    private final List<ItemData> enderchestCache = new ArrayList<>();
 
     public PlayerData() {
-        bagSize = PathManager.DEFAULT_BAG_SIZE;
-        bagItems = new ArrayList<>();
+        this.bagSize = PathManager.DEFAULT_BAG_SIZE;
+    }
+
+    public PlayerData(Player player) {
+        this.player = player;
+        this.bagSize = PathManager.DEFAULT_BAG_SIZE;
     }
 
     public PlayerData(List<ItemData> bagItems) {
@@ -22,9 +32,54 @@ public class PlayerData {
         this.bagItems = bagItems;
     }
 
-    public PlayerData(Integer bagSize, List<ItemData> bagItems) {
+    public PlayerData(Player player, Integer bagSize, List<ItemData> bagItems) {
+        this.player = player;
         this.bagSize = bagSize;
         this.bagItems = bagItems;
+    }
+
+    /**
+     * @return List of ItemData if there's change in inventory, null if none
+     */
+    public List<ItemData> cacheInventories() {
+        List<ItemData> tempInv = new ArrayList<>(inventoryCache);
+        List<ItemData> tempEnderchest = new ArrayList<>(enderchestCache);
+
+        inventoryCache.clear();
+        enderchestCache.clear();
+
+        for (ItemStack itemStack : player.getInventory().getContents()) {
+            if (Talismans.getInstance().getItemManager().getItem(itemStack) != null)
+                this.inventoryCache.add(Talismans.getInstance().getItemManager().getItem(itemStack));
+        }
+
+        for (ItemStack itemStack : player.getEnderChest()) {
+            if (Talismans.getInstance().getItemManager().getItem(itemStack) != null)
+                this.enderchestCache.add(Talismans.getInstance().getItemManager().getItem(itemStack));
+        }
+
+        List<ItemData> result = new ArrayList<>();
+
+        if (!tempInv.equals(inventoryCache))
+            result = new ArrayList<>(inventoryCache);
+
+        if (!tempEnderchest.equals(enderchestCache))
+            result = new ArrayList<>(enderchestCache);
+
+        if (result.isEmpty())
+            return null;
+        else
+            result.removeAll(tempInv);
+
+        return result;
+    }
+
+    public Boolean hasItem(ItemData itemData) {
+        if (bagItems.contains(itemData))
+            return true;
+        else if (inventoryCache.contains(itemData))
+            return true;
+        else return enderchestCache.contains(itemData);
     }
 
 }

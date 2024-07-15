@@ -19,7 +19,7 @@ public class StrengthenWeapon extends ItemData {
 
         Player player = (Player) event.getEntity();
 
-        if (!Talismans.getInstance().getItemManager().hasItem(player, this))
+        if (!hasItemData(player))
             return;
 
         if (MaterialBundle.MELEE.isPlayerHeldType(player) || MaterialBundle.BOW.isPlayerHeldType(player)) {

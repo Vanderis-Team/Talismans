@@ -1,8 +1,11 @@
 package com.vanderis.talismans.player;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.events.EquipTalismanEvent;
+import com.vanderis.talismans.items.ItemData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 
 import java.util.*;
@@ -52,6 +55,10 @@ public class PlayerManager {
         playerData.remove(uuid);
     }
 
+    public PlayerData getPlayerData(Player player) {
+        return playerData.get(player.getUniqueId());
+    }
+
     public PlayerData getPlayerData(String playerName) {
         if (Bukkit.getPlayer(playerName) != null)
             return playerData.get(Bukkit.getPlayer(playerName).getUniqueId());
@@ -78,6 +85,35 @@ public class PlayerManager {
 
     public void fromCacheToFile(String playerName) {
         instance.getBagManager().fromCacheToFile(playerName);
+    }
+
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null)
+            return;
+
+        Player player = (Player) event.getWhoClicked();
+
+        PlayerData playerData = instance.getPlayerManager().getPlayerData(player);
+
+        List<ItemData> talismanChanges = playerData.cacheInventories();
+
+        if (talismanChanges != null) {
+            for (ItemData itemData : talismanChanges) {
+                EquipTalismanEvent equipTalismanEvent = null;
+
+                if (event.getClickedInventory().getType() == InventoryType.PLAYER)
+                    equipTalismanEvent = new EquipTalismanEvent(player, itemData, EquipTalismanEvent.InventoryType.PLAYER_INVENTORY);
+
+                if (event.getClickedInventory().getType() == InventoryType.ENDER_CHEST)
+                    equipTalismanEvent = new EquipTalismanEvent(player, itemData, EquipTalismanEvent.InventoryType.ENDERCHEST);
+
+                if (equipTalismanEvent == null)
+                    return;
+                else
+                    instance.callEvent(equipTalismanEvent);
+
+            }
+        }
     }
 
     public void onJoin(PlayerJoinEvent event) {

@@ -1,6 +1,7 @@
 package com.vanderis.talismans.gui.bag;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.events.EquipTalismanEvent;
 import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.player.PlayerData;
 import com.vanderis.talismans.utils.*;
@@ -30,14 +31,10 @@ public class BagManager {
         fromCacheToFile(player);
     }
 
-    public Boolean hasItem(Player player, ItemData itemData) {
-        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().contains(itemData);
-    }
-
     public void fromFileToCache(Player player) {
         Integer size = instance.getFileManager().getSize(player);
         List<ItemData> items = convertStringListToCacheData(instance.getFileManager().getBagItems(player));
-        instance.getPlayerManager().playerData.put(player.getUniqueId(), new PlayerData(size, items));
+        instance.getPlayerManager().playerData.put(player.getUniqueId(), new PlayerData(player, size, items));
 
         Logging.debug("BagGUI", "Bag owner [" + player.getName() + "] has been cached (Online).");
     }
@@ -46,7 +43,7 @@ public class BagManager {
         Integer size = instance.getFileManager().getSize(playerName);
         List<ItemData> items = convertStringListToCacheData(instance.getFileManager().getBagItems(playerName));
 
-        instance.getPlayerManager().offlinePlayerData.put(playerName, new PlayerData(size, items));
+        instance.getPlayerManager().offlinePlayerData.put(playerName, new PlayerData(null, size, items));
 
         Logging.debug("BagGUI", "Bag owner [" + playerName + "] has been cached (Offline).");
     }
@@ -103,10 +100,10 @@ public class BagManager {
     }
 
     public ItemData getItem(Player player, Integer index) {
-        if (index >= instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().size())
+        if (index >= instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData(player)).getBagItems().size())
             return null;
 
-        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems().get(index);
+        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData(player)).getBagItems().get(index);
     }
 
     public ItemData getItem(String playerName, Integer index) {
@@ -119,7 +116,7 @@ public class BagManager {
     }
 
     public List<ItemData> getItems(Player player) {
-        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData()).getBagItems();
+        return instance.getPlayerManager().playerData.getOrDefault(player.getUniqueId(), new PlayerData(player)).getBagItems();
     }
 
     public List<ItemData> getItems(String playerName) {
@@ -191,6 +188,10 @@ public class BagManager {
             instance.getGuiManager().updateGUI(player);
 
             itemPressOn.setAmount(itemPressOn.getAmount() - 1);
+
+            EquipTalismanEvent equipTalismanEvent = new EquipTalismanEvent(player, itemData, EquipTalismanEvent.InventoryType.BAG);
+
+            instance.callEvent(equipTalismanEvent);
         }
     }
 

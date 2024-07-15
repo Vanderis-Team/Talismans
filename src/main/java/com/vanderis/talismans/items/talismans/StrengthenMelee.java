@@ -19,7 +19,7 @@ public class StrengthenMelee extends ItemData {
 
         Player player = (Player) event.getEntity();
 
-        if (!Talismans.getInstance().getItemManager().hasItem(player, this))
+        if (!hasItemData(player))
             return;
 
         if (MaterialBundle.MELEE.isPlayerHeldType(player)) {

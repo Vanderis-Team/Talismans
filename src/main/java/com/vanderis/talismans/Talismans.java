@@ -13,7 +13,7 @@ import com.vanderis.talismans.player.PlayerManager;
 import lombok.Getter;
 import me.orineko.pluginspigottools.CommandManager;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -93,6 +93,10 @@ public final class Talismans extends JavaPlugin {
 
     private void registerEvent(Listener listener) {
         Bukkit.getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    public void callEvent(Event event) {
+        getServer().getPluginManager().callEvent(event);
     }
 
     public static Talismans getInstance() {

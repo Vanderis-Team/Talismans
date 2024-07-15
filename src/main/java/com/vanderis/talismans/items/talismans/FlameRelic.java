@@ -19,7 +19,7 @@ public class FlameRelic extends ItemData {
 
         Player player = (Player) event.getEntity();
 
-        if (!Talismans.getInstance().getItemManager().hasItem(player, this))
+        if (!hasItemData(player))
             return;
 
         if (event.getCause() == EntityDamageEvent.DamageCause.FIRE ||

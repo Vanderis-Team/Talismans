@@ -77,6 +77,10 @@ public abstract class ItemData implements Listener {
         return valid;
     }
 
+    public Boolean hasItemData(Player player) {
+        return Talismans.getInstance().getPlayerManager().getPlayerData(player).hasItem(this);
+    }
+
     public void saveToFile() {
         fileManager.set("item-result", itemResult);
         fileManager.set("craftable", craftable);

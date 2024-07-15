@@ -14,6 +14,8 @@ public class ClickEvent implements Listener {
         instance.getEditManager().onEditClick(event);
         instance.getCollectionsManager().onCollectionsClick(event);
         instance.getCraftingManager().onCraftingClick(event);
+
+        instance.getPlayerManager().onInventoryClick(event);
     }
 
 }

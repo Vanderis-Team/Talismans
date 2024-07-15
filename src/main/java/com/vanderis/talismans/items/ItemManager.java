@@ -22,13 +22,8 @@ public class ItemManager {
     }
 
     public void removeItemFromCache(ItemData itemData) {
-
         itemList = itemList.stream()
                 .filter(cache -> cache.getId().equals(itemData.getId()) && cache.getLevel().equals(itemData.level)).toList();
-    }
-
-    public Boolean hasItem(Player player, ItemData itemData) {
-        return instance.getBagManager().hasItem(player, itemData); // TODO: inventory & enderchest
     }
 
     @Nullable
