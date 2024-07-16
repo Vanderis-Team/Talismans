@@ -1,6 +1,7 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.events.effect.TalismanEffectEvent;
 import com.vanderis.talismans.utils.Color;
 import com.vanderis.talismans.utils.Logging;
 import lombok.*;
@@ -109,6 +110,14 @@ public abstract class ItemData implements Listener {
             recipe.add(fileManager.getItemStack("recipe." + i));
 
         getValueFile(fileManager);
+    }
+
+    public TalismanEffectEvent callEvent(Player player) {
+        TalismanEffectEvent talismanEffectEvent = new TalismanEffectEvent(player, this);
+
+        Talismans.getInstance().callEvent(talismanEffectEvent);
+
+        return talismanEffectEvent;
     }
 
     public String toString() {

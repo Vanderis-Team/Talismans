@@ -1,7 +1,7 @@
 package com.vanderis.talismans.gui.bag;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.events.EquipTalismanEvent;
+import com.vanderis.talismans.events.equip.*;
 import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.player.PlayerData;
 import com.vanderis.talismans.utils.*;
@@ -189,7 +189,7 @@ public class BagManager {
 
             itemPressOn.setAmount(itemPressOn.getAmount() - 1);
 
-            EquipTalismanEvent equipTalismanEvent = new EquipTalismanEvent(player, itemData, EquipTalismanEvent.InventoryType.BAG);
+            EquipTalismanEvent equipTalismanEvent = new EquipTalismanEvent(player, itemData, TalismanInventoryType.BAG);
 
             instance.callEvent(equipTalismanEvent);
         }

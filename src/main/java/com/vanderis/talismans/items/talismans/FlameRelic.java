@@ -1,6 +1,6 @@
 package com.vanderis.talismans.items.talismans;
 
-import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.events.effect.TalismanEffectEvent;
 import com.vanderis.talismans.items.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,9 +22,14 @@ public class FlameRelic extends ItemData {
         if (!hasItemData(player))
             return;
 
+        TalismanEffectEvent talismanEffectEvent = callEvent(player);
+
+        if (talismanEffectEvent.isCancelled())
+            return;
+
         if (event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
                 event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)
-            event.setDamage(event.getDamage() - (event.getDamage() * getValueAsInt("reduce_damage")));
+            event.setDamage(event.getDamage() - (event.getDamage() * talismanEffectEvent.getItemData().getValueAsInt("reduce_damage")));
     }
 
 }

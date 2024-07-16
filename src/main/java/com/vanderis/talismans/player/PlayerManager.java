@@ -1,13 +1,14 @@
 package com.vanderis.talismans.player;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.events.EquipTalismanEvent;
+import com.vanderis.talismans.events.equip.*;
 import com.vanderis.talismans.items.ItemData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class PlayerManager {
@@ -56,6 +57,9 @@ public class PlayerManager {
     }
 
     public PlayerData getPlayerData(Player player) {
+        if (!playerData.containsKey(player.getUniqueId()))
+            fromFileToCache(player);
+
         return playerData.get(player.getUniqueId());
     }
 
@@ -95,24 +99,39 @@ public class PlayerManager {
 
         PlayerData playerData = instance.getPlayerManager().getPlayerData(player);
 
+        TalismanInventoryType talismanInventoryType = event.getClickedInventory().getType() == InventoryType.PLAYER ?
+                                                            TalismanInventoryType.PLAYER_INVENTORY : event.getClickedInventory().getType() == InventoryType.ENDER_CHEST ?
+                                                            TalismanInventoryType.ENDERCHEST : null;
+
+        List<ItemData> oldTalismansList = playerData.getAllItems();
+
         List<ItemData> talismanChanges = playerData.cacheInventories();
 
-        if (talismanChanges != null) {
-            for (ItemData itemData : talismanChanges) {
-                EquipTalismanEvent equipTalismanEvent = null;
+        List<ItemData> newTalismansList = playerData.getAllItems();
 
-                if (event.getClickedInventory().getType() == InventoryType.PLAYER)
-                    equipTalismanEvent = new EquipTalismanEvent(player, itemData, EquipTalismanEvent.InventoryType.PLAYER_INVENTORY);
+        if (talismanChanges != null)
+            if (oldTalismansList.size() < newTalismansList.size()) { // Old < New, New has more items -> player equip new talismans
 
-                if (event.getClickedInventory().getType() == InventoryType.ENDER_CHEST)
-                    equipTalismanEvent = new EquipTalismanEvent(player, itemData, EquipTalismanEvent.InventoryType.ENDERCHEST);
+                equipTalismanEvent(new EquipTalismanEvent(player, talismanInventoryType), talismanChanges);
 
-                if (equipTalismanEvent == null)
-                    return;
-                else
-                    instance.callEvent(equipTalismanEvent);
+            } else { // Old > New, New has fewer items -> player unequip talismans
+
+                equipTalismanEvent(new UnEquipTalismanEvent(player, talismanInventoryType), talismanChanges);
 
             }
+
+    }
+
+    private void equipTalismanEvent(IEquipTalismanEvent iEquipTalismanEvent, List<ItemData> talismanChanges) {
+        if (iEquipTalismanEvent.getTalismanInventoryType() == null)
+            return;
+
+        for (ItemData itemData : talismanChanges) {
+
+            iEquipTalismanEvent.setEquipTalisman(itemData);
+
+            instance.callEvent(iEquipTalismanEvent);
+
         }
     }
 

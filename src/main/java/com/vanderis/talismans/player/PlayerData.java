@@ -3,7 +3,7 @@ package com.vanderis.talismans.player;
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.items.ItemData;
-import lombok.Getter;
+import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,6 +13,7 @@ import java.util.*;
 public class PlayerData {
 
     private Player player;
+    @Setter
     private Integer bagSize;
     private List<ItemData> bagItems = new ArrayList<>();
     private final List<ItemData> inventoryCache = new ArrayList<>();
@@ -36,6 +37,40 @@ public class PlayerData {
         this.player = player;
         this.bagSize = bagSize;
         this.bagItems = bagItems;
+    }
+
+    public List<ItemData> getAllItems() {
+        List<ItemData> items = new ArrayList<>();
+
+        items.addAll(bagItems);
+        items.addAll(inventoryCache);
+        items.addAll(enderchestCache);
+
+        return items;
+    }
+
+    public List<String> getAllItemsName() {
+        List<ItemData> items = new ArrayList<>(getAllItems());
+
+        if (items.isEmpty())
+            return new ArrayList<>();
+
+        List<String> names = new ArrayList<>();
+
+        for (ItemData item : items) {
+            StringBuilder nameLine = new StringBuilder();
+
+            for (int i = 0; i < 5; i++) {
+                nameLine.append(item.getName());
+
+                if (i != 4)
+                    nameLine.append(", ");
+            }
+
+            names.add(nameLine.toString());
+        }
+
+        return names;
     }
 
     /**
