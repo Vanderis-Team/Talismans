@@ -11,11 +11,24 @@ public class PathManager {
     private final Talismans instance = Talismans.getInstance();
 
     private final FileConfiguration config = instance.getFileManager().config;
+    private final FileConfiguration messages = instance.getFileManager().messages;
 
     public static HashMap<String, List<String>> HELP;
     public static HashMap<String, List<String>> ADMIN_HELP;
 
     public static Integer DEFAULT_BAG_SIZE = 0;
+
+    public static String PREFIX_16UP;
+    public static String PREFIX_16DOWN;
+
+    public static List<String> STATUS_COMMAND_MESSAGE;
+    public static String STATUS_COMMAND_NONE_FOUND;
+
+    public static String BAG_EQUIP_WRONG_ITEM;
+    public static String BAG_UNEQUIP;
+    public static String BAG_BLOCK_SLOT;
+
+    public static String CRAFTING_SUCCESS;
 
     public void register() {
         HELP = new HashMap<>();
@@ -24,7 +37,20 @@ public class PathManager {
         ADMIN_HELP = new HashMap<>();
         ADMIN_HELP.put("1", adminHelp1());
 
+        PREFIX_16UP = config.getString("prefix.16up");
+        PREFIX_16DOWN = config.getString("prefix.16down");
+
         DEFAULT_BAG_SIZE = config.getInt("bag.default-size");
+
+        STATUS_COMMAND_MESSAGE = new ArrayList<>();
+        STATUS_COMMAND_MESSAGE = messages.getStringList("command.status.message");
+        STATUS_COMMAND_NONE_FOUND = messages.getString("command.status.none-found");
+
+        BAG_EQUIP_WRONG_ITEM = messages.getString("bag.equip-wrong-item");
+        BAG_UNEQUIP = messages.getString("bag.unequip-item");
+        BAG_BLOCK_SLOT = messages.getString("bag.block-slot");
+
+        CRAFTING_SUCCESS = messages.getString("crafting.success-craft-item");
     }
 
     private List<String> help1() {

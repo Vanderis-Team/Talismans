@@ -2,6 +2,7 @@ package com.vanderis.talismans.gui.bag;
 
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.events.equip.*;
+import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.player.PlayerData;
 import com.vanderis.talismans.utils.*;
@@ -162,11 +163,11 @@ public class BagManager {
 
                 itemData.giveItemResult(player);
 
-                Message.sendMessage(player, Message.prefix() + " &aYou just remove " + itemData.getName() + " &aout of your bag!");
+                Message.sendMessage(player, Message.prefix() + Placeholder.replacePlaceholders(PathManager.BAG_UNEQUIP, itemData.getName()));
             }
 
             if (gui.isType(slot, "block-slot")) {
-                Message.sendMessage(player, Message.prefix() + " &cThis slot is blocked, please purchase new slot to open!");
+                Message.sendMessage(player, Message.prefix() + PathManager.BAG_BLOCK_SLOT);
 
                 player.playSound(player, XSound.BLOCK_ANVIL_LAND.parseSound(), 20, 20);
             }
@@ -174,7 +175,7 @@ public class BagManager {
 
         if (slot >= gui.getItemsPutInGUI().size() && slot < gui.getItemsPutInGUI().size() + 36) { // Bottom Inventory
             if (itemManager.getItem(itemPressOn) == null) {
-                Message.sendMessage(player, Message.prefix() + " &cThat item is not a talisman.");
+                Message.sendMessage(player, Message.prefix() + PathManager.BAG_EQUIP_WRONG_ITEM);
 
                 player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 10);
 

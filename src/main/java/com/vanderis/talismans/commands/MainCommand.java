@@ -233,17 +233,23 @@ public class MainCommand extends CommandManager {
     }
 
     private void status(CommandSender sender, Player target) {
-        Message.sendMessage(sender, "");
-        Message.sendMessage(sender, "&aActivated Talismans: ");
 
-        List<String> itemsName = new ArrayList<>(playerManager.getPlayerData(target).getAllItemsName());
+        for (String line : PathManager.STATUS_COMMAND_MESSAGE) {
+            if (line.contains("<talismans-list>")) {
+                List<String> itemsName = new ArrayList<>(playerManager.getPlayerData(target).getAllItemsName());
 
-        Logging.debug("Status Command", "Items List: " + itemsName);
+                Logging.debug("Status Command", "Items List: " + itemsName);
 
-        if (itemsName.isEmpty()) {
-            Message.sendMessage(sender, "&cNone");
-        } else {
-            Message.sendMessages(sender,  itemsName);
+                if (itemsName.isEmpty()) {
+                    Message.sendMessage(sender, PathManager.STATUS_COMMAND_NONE_FOUND);
+                } else {
+                    Message.sendMessages(sender,  itemsName);
+                }
+
+                continue;
+            }
+
+            Message.sendMessage(target, line);
         }
     }
 

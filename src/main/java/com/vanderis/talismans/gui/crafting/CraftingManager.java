@@ -1,6 +1,7 @@
 package com.vanderis.talismans.gui.crafting;
 
 import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.items.ItemData;
 import com.vanderis.talismans.utils.*;
 import my.plugin.utils.XSound;
@@ -46,7 +47,7 @@ public class CraftingManager {
 
                     gui.result = null;
 
-                    Message.sendMessage(player, Message.prefix() + " &aYou just successfully crafted " + result.getName() + "&a!");
+                    Message.sendMessage(player, Message.prefix() + Placeholder.replacePlaceholders(PathManager.BAG_UNEQUIP, result.getName()));
 
                     gui.getInventory().clear();
                     gui.updateInventory();

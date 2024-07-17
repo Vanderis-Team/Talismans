@@ -3,6 +3,7 @@ package com.vanderis.talismans.player;
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.items.ItemData;
+import com.vanderis.talismans.utils.Logging;
 import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +43,8 @@ public class PlayerData {
     public List<ItemData> getAllItems() {
         List<ItemData> items = new ArrayList<>();
 
+        cacheInventories();
+
         items.addAll(bagItems);
         items.addAll(inventoryCache);
         items.addAll(enderchestCache);
@@ -50,25 +53,36 @@ public class PlayerData {
     }
 
     public List<String> getAllItemsName() {
-        List<ItemData> items = new ArrayList<>(getAllItems());
+        List<ItemData> items = new ArrayList<>(new HashSet<>(getAllItems()));
 
         if (items.isEmpty())
             return new ArrayList<>();
 
         List<String> names = new ArrayList<>();
 
-        for (ItemData item : items) {
-            StringBuilder nameLine = new StringBuilder();
+        int count = 0;
+        StringBuilder nameLine = new StringBuilder();
 
-            for (int i = 0; i < 5; i++) {
-                nameLine.append(item.getName());
+        for (int i = 0; i < items.size(); i++) {
+            ItemData item = items.get(i);
 
-                if (i != 4)
-                    nameLine.append(", ");
+            nameLine.append(item.getName());
+
+            if (count != 4 && i + 1 != items.size())
+                nameLine.append(", ");
+
+            count++;
+
+            if (count == 5) {
+                names.add(nameLine.toString());
+
+                nameLine = new StringBuilder();
+
+                count = 0;
             }
-
-            names.add(nameLine.toString());
         }
+
+        names.add(nameLine.toString());
 
         return names;
     }

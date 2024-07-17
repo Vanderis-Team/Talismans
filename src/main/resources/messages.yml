@@ -1,0 +1,21 @@
+prefix: # 16 means server version 1.16 which supports hex color
+  16up: "&8[#8413FBT#8B20FBa#922EFBl#993BFCi#A049FCs#A756FCm#AE64FCa#B571FDn#BC7FFDs&8] "
+  16down: "&8[&5Talismans&8] "
+
+command:
+  status:
+    message:
+      - ""
+      - "&aActivated Talismans: "
+      - "<item-list>"
+      - ""
+      - "&7&oDuplicate talismans will not stack stats."
+    none-found: "&cNone" # Player has none talismans.
+
+bag:
+  equip-wrong-item: "&cThat item is not a talisman."
+  unequip-item: "&aYou just remove <item-name> &aout of your bag!"
+  block-slot: "&cThis slot is blocked, please purchase new slot to open!"
+
+crafting:
+  success-craft-item: "&aYou just successfully crafted <item-name> &a!"

@@ -1,5 +1,6 @@
 package com.vanderis.talismans.utils;
 
+import com.vanderis.talismans.files.PathManager;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,9 +13,9 @@ public class Message {
 
     public String prefix() {
         if (Version.getServerVersion() >= 16) {
-            return Color.color("&8[#8413FBT#8B20FBa#922EFBl#993BFCi#A049FCs#A756FCm#AE64FCa#B571FDn#BC7FFDs&8]");
+            return Color.color(PathManager.PREFIX_16UP);
         } else {
-            return Color.color("&8[&5Talismans&8]");
+            return Color.color(PathManager.PREFIX_16DOWN);
         }
     }
 
