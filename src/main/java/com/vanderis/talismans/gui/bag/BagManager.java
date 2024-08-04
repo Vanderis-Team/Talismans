@@ -164,6 +164,10 @@ public class BagManager {
                 itemData.giveItemResult(player);
 
                 Message.sendMessage(player, Message.prefix() + Placeholder.replacePlaceholders(PathManager.BAG_UNEQUIP, itemData.getName()));
+
+                UnEquipTalismanEvent unEquipTalismanEvent = new UnEquipTalismanEvent(player, itemData, TalismanInventoryType.BAG);
+
+                instance.callEvent(unEquipTalismanEvent);
             }
 
             if (gui.isType(slot, "block-slot")) {
