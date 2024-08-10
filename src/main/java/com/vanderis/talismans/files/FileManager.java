@@ -9,7 +9,11 @@ import org.bukkit.configuration.file.*;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.file.*;
+import java.security.CodeSource;
 import java.util.*;
+import java.util.zip.*;
 
 public class FileManager {
 
@@ -34,35 +38,19 @@ public class FileManager {
         craftingGUI = new me.orineko.pluginspigottools.FileManager("gui/crafting.yml", instance).copyDefault();
     }
 
+    @SneakyThrows
     public void loadItems() {
-        File folder = new File(Talismans.getInstance().getDataFolder() + "/talismans");
-        if (!folder.exists()) folder.mkdirs();
+        List<String> cache = getYamlFilesFromSource("talismans");
 
-        File[] talismans = folder.listFiles();
+        for (String talismanPath : cache) {
+            new me.orineko.pluginspigottools.FileManager("talismans/" + talismanPath, instance).copyDefault();
 
-        if (talismans == null)
-            return;
+            ItemName id = ItemName.valueOf(talismanPath.split("/")[0].toUpperCase());
+            Integer talismanLevel = Integer.parseInt(talismanPath.split("/")[1].replace(".yml", ""));
 
-        for (File file : talismans) {
-            File[] levelFile = file.listFiles();
-
-            if (levelFile == null)
-                continue;
-
-
-            for (File level : levelFile) {
-
-                new me.orineko.pluginspigottools.FileManager("talismans/" + file.getName() + "/" + level.getName(), instance).copyDefault();
-
-                Integer talismanLevel = Integer.parseInt(level.getName().replace(".yml", ""));
-
-                ItemName id = ItemName.valueOf(file.getName().toUpperCase());
-
-                loadItemsFromID(id, talismanLevel);
-            }
-
-
+            loadItemsFromID(id, talismanLevel);
         }
+
     }
 
     public void loadItemsFromID(ItemName id, Integer level) {
@@ -172,6 +160,36 @@ public class FileManager {
 
         yml.set("bag-size", size);
         yml.save(file);
+    }
+
+    @SneakyThrows
+    private List<String> getYamlFilesFromSource(String folderName) {
+        List<String> temporaryFiles = new ArrayList<>();
+
+        File folder = new File(instance.getDataFolder(), folderName);
+        if (!folder.exists()) folder.mkdirs();
+
+        CodeSource src = getClass().getProtectionDomain().getCodeSource();
+        if (src != null) {
+            URL jar = src.getLocation();
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+            while (true) {
+                ZipEntry e = zip.getNextEntry();
+                if (e == null)
+                    break;
+                String name = e.getName();
+
+                if (name.startsWith(folderName)) {
+                    String resultName = name.replace(folderName + "/", "");
+
+                    if (resultName.contains(".yml"))
+                        temporaryFiles.add(resultName);
+
+                }
+            }
+        }
+
+        return temporaryFiles;
     }
 
 }

@@ -33,7 +33,12 @@ public class MainCommand extends CommandManager {
         super(plugin);
     }
 
-    @CommandSub(length = 0, names = "help", permissions = "talismans.help")
+    @CommandSub(length = 0)
+    public void onTalismans(Player player, String[] args) {
+        instance.getGuiManager().openGUI(player, new BagGUI(player.getName()));
+    }
+
+    @CommandSub(length = 1, names = "help", permissions = "talismans.help")
     public void onHelp(CommandSender sender, String[] args) {
         if (PathManager.HELP.isEmpty()) return;
 
@@ -44,10 +49,7 @@ public class MainCommand extends CommandManager {
             Logging.debug("Help Command", "Args Length >= 1");
 
             if (checkEqualArgs(args, 0, "help")) {
-                if (args.length >= 2) {
-                    list = helpCache.getOrDefault("1", null);
-                } else
-                    list = helpCache.getOrDefault("1", null);
+                list = helpCache.getOrDefault("1", null);
             }
 
         } else {
@@ -154,12 +156,12 @@ public class MainCommand extends CommandManager {
         }
     }
 
-    @CommandSub(length = 0, names = "collections", permissions = "talismans.collections", justPlayerUseCmd = true)
+    @CommandSub(length = 1, names = "collections", permissions = "talismans.collections", justPlayerUseCmd = true)
     public void onOpenCollections(Player player, String[] args) {
         instance.getGuiManager().openGUI(player, new CollectionsGUI());
     }
 
-    @CommandSub(length = 0, names = "crafting", permissions = "talismans.crafting", justPlayerUseCmd = true)
+    @CommandSub(length = 1, names = "crafting", permissions = "talismans.crafting", justPlayerUseCmd = true)
     public void onOpenCrafting(Player player, String[] args) {
         instance.getGuiManager().openGUI(player, new CraftingGUI());
     }
@@ -185,7 +187,7 @@ public class MainCommand extends CommandManager {
         }
     }
 
-    @CommandSub(length = 0, names = "debug", permissions = "talismans.debug", justPlayerUseCmd = true)
+    @CommandSub(length = 1, names = "debug", permissions = "talismans.debug", justPlayerUseCmd = true)
     public void onDebug(Player player, String[] args) {
         Logging.debug = !Logging.debug;
 

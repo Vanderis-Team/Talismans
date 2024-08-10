@@ -37,10 +37,10 @@ public class PathManager {
         ADMIN_HELP = new HashMap<>();
         ADMIN_HELP.put("1", adminHelp1());
 
-        PREFIX_16UP = config.getString("prefix.16up");
-        PREFIX_16DOWN = config.getString("prefix.16down");
-
         DEFAULT_BAG_SIZE = config.getInt("bag.default-size");
+
+        PREFIX_16UP = messages.getString("prefix.16up");
+        PREFIX_16DOWN = messages.getString("prefix.16down");
 
         STATUS_COMMAND_MESSAGE = new ArrayList<>();
         STATUS_COMMAND_MESSAGE = messages.getStringList("command.status.message");
