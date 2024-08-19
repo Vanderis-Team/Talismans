@@ -6,8 +6,8 @@ import com.vanderis.talismans.files.*;
 import com.vanderis.talismans.gui.GUIManager;
 import com.vanderis.talismans.gui.collections.CollectionsManager;
 import com.vanderis.talismans.gui.crafting.CraftingManager;
-import com.vanderis.talismans.gui.edit.EditManager;
-import com.vanderis.talismans.items.ItemManager;
+import com.vanderis.talismans.gui.edit.*;
+import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.listeners.*;
 import com.vanderis.talismans.player.PlayerManager;
 import lombok.Getter;
@@ -25,9 +25,12 @@ public final class Talismans extends JavaPlugin {
     private PathManager pathManager;
     private PlayerManager playerManager;
     private ItemManager itemManager;
+    private EffectManager effectManager;
     private GUIManager guiManager;
     private BagManager bagManager;
     private EditManager editManager;
+    private EditLoreManager editLoreManager;
+    private EditEffectManager editEffectManager;
     private CollectionsManager collectionsManager;
     private CraftingManager craftingManager;
 
@@ -61,11 +64,16 @@ public final class Talismans extends JavaPlugin {
         itemManager = new ItemManager();
         itemManager.register();
 
+        effectManager = new EffectManager();
+        effectManager.register();
+
         guiManager = new GUIManager();
 
         bagManager = new BagManager();
 
         editManager = new EditManager();
+        editLoreManager = new EditLoreManager();
+        editEffectManager = new EditEffectManager();
 
         collectionsManager = new CollectionsManager();
 
@@ -89,6 +97,7 @@ public final class Talismans extends JavaPlugin {
         registerEvent(new CloseEvent());
         registerEvent(new JoinEvent());
         registerEvent(new QuitEvent());
+        registerEvent(new ChatEvent());
     }
 
     private void registerEvent(Listener listener) {

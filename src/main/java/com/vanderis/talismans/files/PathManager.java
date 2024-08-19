@@ -21,6 +21,8 @@ public class PathManager {
     public static String PREFIX_16UP;
     public static String PREFIX_16DOWN;
 
+    public static String CREATE_COMMAND_ALREADY_EXISTS;
+    public static String CREATE_COMMAND_SUCCESS;
     public static List<String> STATUS_COMMAND_MESSAGE;
     public static String STATUS_COMMAND_NONE_FOUND;
 
@@ -42,6 +44,8 @@ public class PathManager {
         PREFIX_16UP = messages.getString("prefix.16up");
         PREFIX_16DOWN = messages.getString("prefix.16down");
 
+        CREATE_COMMAND_SUCCESS = messages.getString("command.create.success");
+        CREATE_COMMAND_ALREADY_EXISTS = messages.getString("command.create.already-exists");
         STATUS_COMMAND_MESSAGE = new ArrayList<>();
         STATUS_COMMAND_MESSAGE = messages.getStringList("command.status.message");
         STATUS_COMMAND_NONE_FOUND = messages.getString("command.status.none-found");
@@ -50,7 +54,7 @@ public class PathManager {
         BAG_UNEQUIP = messages.getString("bag.unequip-item");
         BAG_BLOCK_SLOT = messages.getString("bag.block-slot");
 
-        CRAFTING_SUCCESS = messages.getString("crafting.success-craft-item");
+        CRAFTING_SUCCESS = messages.getString("crafting.success");
     }
 
     private List<String> help1() {
@@ -64,6 +68,7 @@ public class PathManager {
         return Color.color(Arrays.asList(
                 "",
                 title,
+                " &5/talismans &f: Open talismans bag.",
                 " &5/talismans bag&f: Open talismans bag.",
                 " &5/talismans status&f: Show active talismans."
         ));
@@ -80,9 +85,10 @@ public class PathManager {
         return Color.color(Arrays.asList(
                 "",
                 title,
-                " &5/talismans give <player> <name> <level>&f: Give talismans to player.",
+                " &5/talismans create <id>&f: Create new talismans.",
+                " &5/talismans give <player> <talismans-id>&f: Give talismans to player.",
                 " &5/talismans bag [player]&f: Open talismans bag.",
-                " &5/talismans edit <id> <level>&f: Edit talismans.",
+                " &5/talismans edit <talismans-id>&f: Edit talismans.",
                 " &5/talismans collections&f: Talismans list.",
                 " &5/talismans status [player]&f: Show active talismans on player.",
                 " &5/talismans debug&f: Debug the plugin."

@@ -2,15 +2,13 @@ package com.vanderis.talismans.files;
 
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.items.*;
-import com.vanderis.talismans.items.talismans.*;
-import com.vanderis.talismans.utils.Logging;
+import com.vanderis.talismans.utils.*;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.file.*;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.file.*;
 import java.security.CodeSource;
 import java.util.*;
 import java.util.zip.*;
@@ -25,6 +23,8 @@ public class FileManager {
     public FileConfiguration collectionsGUI;
     public FileConfiguration bagGUI;
     public FileConfiguration editGUI;
+    public FileConfiguration editLoreGUI;
+    public FileConfiguration editEffectGUI;
     public FileConfiguration craftingGUI;
 
     @SneakyThrows
@@ -35,48 +35,87 @@ public class FileManager {
         collectionsGUI = new me.orineko.pluginspigottools.FileManager("gui/collections.yml", instance).copyDefault();
         bagGUI = new me.orineko.pluginspigottools.FileManager("gui/bag.yml", instance).copyDefault();
         editGUI = new me.orineko.pluginspigottools.FileManager("gui/edit.yml", instance).copyDefault();
+        editLoreGUI = new me.orineko.pluginspigottools.FileManager("gui/edit-lore.yml", instance).copyDefault();
+        editEffectGUI = new me.orineko.pluginspigottools.FileManager("gui/edit-effect.yml", instance).copyDefault();
         craftingGUI = new me.orineko.pluginspigottools.FileManager("gui/crafting.yml", instance).copyDefault();
     }
 
     @SneakyThrows
     public void loadItems() {
-        List<String> cache = getYamlFilesFromSource("talismans");
+        File folder = new File(Talismans.getInstance().getDataFolder() + "\\talismans");
+        if (!folder.exists()) folder.mkdirs();
 
-        for (String talismanPath : cache) {
-            new me.orineko.pluginspigottools.FileManager("talismans/" + talismanPath, instance).copyDefault();
+        loadSourceWhenTalismansFolderEmpty();
 
-            ItemName id = ItemName.valueOf(talismanPath.split("/")[0].toUpperCase());
-            Integer talismanLevel = Integer.parseInt(talismanPath.split("/")[1].replace(".yml", ""));
-
-            loadItemsFromID(id, talismanLevel);
-        }
-
+        loadCreatedTalismans();
     }
 
-    public void loadItemsFromID(ItemName id, Integer level) {
-        switch (id) { // TODO: Something better
-            case STRENGTHEN_WEAPON:
-                load(new StrengthenWeapon(level));
-                break;
-            case STRENGTHEN_MELEE:
-                load(new StrengthenMelee(level));
-                break;
-            case STRENGTHEN_BOW:
-                load(new StrengthenBow(level));
-                break;
-            case STRENGTHEN_SWORD:
-                load(new StrengthenSword(level));
-                break;
-            case FLAME_RELIC:
-                load(new FlameRelic(level));
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void load(ItemData data) {
+    private void load(ItemData data) {
         instance.getItemManager().itemList.add(data);
+    }
+
+    private void loadSourceWhenTalismansFolderEmpty() {
+        File folder = new File(Talismans.getInstance().getDataFolder() + "\\talismans");
+
+        if (folder.list().length != 0)
+            return;
+
+        List<String> source = getYamlFilesFromSource("talismans");
+
+        Logging.log("&bLoad Talismans From Source: &e" + source.stream().map(s -> s.replace(".yml", "")).toList().toString().replace("[", "").replace("]", ""));
+        for (String talismanPath : source) {
+            new me.orineko.pluginspigottools.FileManager("talismans\\" + talismanPath, instance).copyDefault();
+
+            String id = talismanPath.split("/")[0];
+
+            load(new ItemData(id));
+        }
+
+        Logging.log("&aThen");
+    }
+
+    private void loadCreatedTalismans() {
+        File folder = new File(Talismans.getInstance().getDataFolder() + "\\talismans");
+
+        if (folder.list().length == 0)
+            return;
+
+        Logging.log("&aLoad Talismans From Folder: &e" + Arrays.stream(folder.list()).map(s -> s.replace(".yml", "")).toList().toString().replace("[", "").replace("]", ""));
+        for (File talismansID : folder.listFiles()) {
+            new me.orineko.pluginspigottools.FileManager("talismans\\" + talismansID.getName(), instance).copyDefault();
+
+            String id = talismansID.getName().replace(".yml", "");
+
+            load(new ItemData(id));
+        }
+    }
+
+    @SneakyThrows
+    public void createNewTalismans(String id) {
+        if (instance.getItemManager().getItem(id) != null)
+            return;
+
+        File file = new File(instance.getDataFolder() + "\\talismans\\" + id + ".yml");
+        if (!file.exists()) {
+            file.createNewFile();
+
+            YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
+            yml.set("item-result", null);
+            yml.set("craftable", true);
+
+            for (int i = 1; i <= 9; i++)
+                yml.set("recipe." + i, null);
+
+            Map<String, String> basedValues = new HashMap<>();
+            for (String effectID : instance.getEffectManager().effectNameList)
+                basedValues.put(effectID, "0.0");
+
+            yml.set("effects-values", basedValues);
+
+            yml.save(file);
+        }
+
+        load(new ItemData(id));
     }
 
     @SneakyThrows
@@ -90,7 +129,7 @@ public class FileManager {
         if (!folder.exists()) folder.mkdirs();
 
         File file = new File(instance.getDataFolder() + "\\playerdata\\" + playerName + ".yml");
-        if (!isDataExist(playerName)) {
+        if (!isPlayerDataExist(playerName)) {
             file.createNewFile();
 
             YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
@@ -102,7 +141,7 @@ public class FileManager {
         return file;
     }
 
-    public Boolean isDataExist(String playerName) {
+    public Boolean isPlayerDataExist(String playerName) {
         File file = new File(instance.getDataFolder() + "\\playerdata\\" + playerName + ".yml");
 
         return file.exists();

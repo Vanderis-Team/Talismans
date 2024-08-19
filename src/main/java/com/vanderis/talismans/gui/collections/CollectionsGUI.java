@@ -40,7 +40,7 @@ public class CollectionsGUI extends GUIHolder {
     public boolean updateInventory() {
         super.updateInventory();
 
-        this.maxPage = (int) Math.ceil((double) itemManager.itemList.size() / getAmountOfType("item-slot"));
+        this.maxPage = Math.max(1, (int) Math.ceil((double) itemManager.itemList.size() / getAmountOfType("item-slot")));
 
         viewer.getOpenInventory().setTitle(Placeholder.replacePlaceholders(Color.color(fileConfiguration.getString("title")), String.valueOf(currentPage), String.valueOf(maxPage)));
 

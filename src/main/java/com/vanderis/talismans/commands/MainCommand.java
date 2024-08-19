@@ -33,7 +33,7 @@ public class MainCommand extends CommandManager {
         super(plugin);
     }
 
-    @CommandSub(length = 0)
+    @CommandSub(length = 0, permissions = "talismans.bag")
     public void onTalismans(Player player, String[] args) {
         instance.getGuiManager().openGUI(player, new BagGUI(player.getName()));
     }
@@ -62,14 +62,13 @@ public class MainCommand extends CommandManager {
     }
 
     @SneakyThrows
-    @CommandSub(length = 4, names = "give", permissions = "talismans.give")
+    @CommandSub(length = 3, names = "give", permissions = "talismans.give")
     public void onGive(CommandSender sender, String[] args) {
         Logging.debug("Give Command", "Args Length: " + args.length);
 
-        if (args.length == 4) {
+        if (args.length == 3) {
             String targetName = args[1];
-            ItemName itemName = ItemName.valueOf(args[2].toUpperCase());
-            Integer level = Integer.valueOf(args[3]);
+            String id = args[2];
 
             Player target = findPlayerOnline(targetName, sender, Color.color(Message.prefix() + " &cThat player is not online!"));
 
@@ -80,12 +79,12 @@ public class MainCommand extends CommandManager {
                 return;
             }
 
-            Logging.debug("Give Command", "TalismansName/Level: " + itemName + "/" + level);
+            Logging.debug("Give Command", "TalismansName: " + id);
 
-            ItemData itemData = instance.getItemManager().getItem(itemName, level);
+            ItemData itemData = instance.getItemManager().getItem(id);
 
             if (itemData == null) {
-                Message.sendMessage(sender, Message.prefix() + " &cCannot find &e" + itemName + ":" + level + " &cin database!");
+                Message.sendMessage(sender, Message.prefix() + " &cCannot find &e" + id + " &cin database!");
 
                 if (sender instanceof Player)
                     ((Player) sender).playSound((Player) sender, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 1);
@@ -94,10 +93,10 @@ public class MainCommand extends CommandManager {
             }
 
             if (itemData.getItemResult() == null) {
-                Message.sendMessage(sender, Message.prefix() + " &e" + itemName + ":" + level + " &chas no item stand for it!");
+                Message.sendMessage(sender, Message.prefix() + " &e" + id + " &chas no item stand for it!");
 
                 if (sender instanceof Player) {
-                    Message.sendMessage(sender, Message.prefix() + " &fPlease do &e/talismans edit " + itemName + " " + level + " &fto edit the talisman.");
+                    Message.sendMessage(sender, Message.prefix() + " &fPlease do &e/talismans edit " + id + " &fto edit the talisman.");
 
                     ((Player) sender).playSound((Player) sender, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 1);
                 }
@@ -105,18 +104,18 @@ public class MainCommand extends CommandManager {
                 return;
             }
 
-            instance.getItemManager().getItem(itemName, level).giveItemResult(target);
+            instance.getItemManager().getItem(id).giveItemResult(target);
 
             if (sender instanceof Player)
                 if (sender.getName().equalsIgnoreCase(targetName)) {
-                    Message.sendMessage(sender, Message.prefix() + " &aYou just give &e" + itemName + ":" + level + " &ato &fyourself&a.");
+                    Message.sendMessage(sender, Message.prefix() + " &aYou just give &e" + id + " &ato &fyourself&a.");
                 } else {
-                    Message.sendMessage(sender, Message.prefix() + " &aYou just give &e" + itemName + ":" + level + " &ato &f" + target.getName() + "&a.");
+                    Message.sendMessage(sender, Message.prefix() + " &aYou just give &e" + id + " &ato &f" + target.getName() + "&a.");
                 }
             else
-                Message.sendMessage(sender, Message.prefix() + " &aYou just give &e" + itemName + ":" + level + " &ato &f" + target.getName() + "&a.");
+                Message.sendMessage(sender, Message.prefix() + " &aYou just give &e" + id + " &ato &f" + target.getName() + "&a.");
 
-            Logging.debug("Give Command", "ItemResult: " + instance.getItemManager().getItem(itemName, level).getItemResult());
+            Logging.debug("Give Command", "ItemResult: " + instance.getItemManager().getItem(id).getItemResult());
         }
     }
 
@@ -146,13 +145,32 @@ public class MainCommand extends CommandManager {
         }
     }
 
-    @CommandSub(length = 3, names = "edit", permissions = "talismans.edit", justPlayerUseCmd = true)
-    public void onOpenEdit(Player player, String[] args) {
-        if (args.length == 3) {
-            ItemName id = ItemName.valueOf(args[1].toUpperCase());
-            Integer level = Integer.valueOf(args[2]);
+    @CommandSub(length = 2, names = "create", permissions = "talismans.create")
+    public void onCreate(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            String id = args[1];
 
-            instance.getGuiManager().openGUI(player, new EditGUI(instance.getItemManager().getItem(id, level)));
+            if (instance.getItemManager().getItem(id) != null) {
+                Message.sendMessage(sender, Message.prefix() + " " + PathManager.CREATE_COMMAND_ALREADY_EXISTS);
+
+                return;
+            }
+
+            instance.getFileManager().createNewTalismans(id);
+
+            Message.sendMessage(sender, Message.prefix() + " " +  Placeholder.replacePlaceholders(PathManager.CREATE_COMMAND_SUCCESS, id));
+
+            if (sender instanceof Player)
+                instance.getGuiManager().openGUI((Player) sender, new EditGUI(instance.getItemManager().getItem(id)));
+        }
+    }
+
+    @CommandSub(length = 2, names = "edit", permissions = "talismans.edit", justPlayerUseCmd = true)
+    public void onOpenEdit(Player player, String[] args) {
+        if (args.length == 2) {
+            String id = args[1];
+
+            instance.getGuiManager().openGUI(player, new EditGUI(instance.getItemManager().getItem(id)));
         }
     }
 
@@ -203,19 +221,13 @@ public class MainCommand extends CommandManager {
     public List<String> executeTabCompleter(@Nonnull CommandSender commandSender, @Nonnull String s, @Nonnull String[] args) {
         if (checkEqualArgs(args, 0, "give")) {
             if (args.length == 3) {
-                return Arrays.stream(ItemName.values()).map(ItemName::name).collect(Collectors.toList());
-            }
-            if (args.length == 4) {
-                return getTalismansLevels(args[2]);
+                return instance.getItemManager().itemList.stream().map(ItemData::getId).collect(Collectors.toList());
             }
         }
 
         if (checkEqualArgs(args, 0, "edit")) {
             if (args.length == 2) {
-                return Arrays.stream(ItemName.values()).map(ItemName::name).collect(Collectors.toList());
-            }
-            if (args.length == 3) {
-                return getTalismansLevels(args[1]);
+                return instance.getItemManager().itemList.stream().map(ItemData::getId).collect(Collectors.toList());
             }
         }
 
@@ -261,20 +273,5 @@ public class MainCommand extends CommandManager {
         return sender.hasPermission(permission);
     }
 
-    private List<String> getTalismansLevels(String idArgs) {
-        if (idArgs.isEmpty()) return null;
-
-        ItemName id = ItemName.valueOf(idArgs.toUpperCase());
-
-        long count = instance.getItemManager().itemList.stream().filter(itemData -> itemData.getId() == id).count();
-
-        List<String> result = new ArrayList<>();
-
-        for (long i = 1; i <= count; i++) {
-            result.add(String.valueOf(i));
-        }
-
-        return result;
-    }
 
 }

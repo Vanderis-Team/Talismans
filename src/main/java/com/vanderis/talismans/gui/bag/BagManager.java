@@ -78,10 +78,9 @@ public class BagManager {
         List<ItemData> result = new ArrayList<>();
 
         for (String item : items) {
-            ItemName id = ItemName.valueOf(item.split(":")[0]);
-            Integer level = Integer.parseInt(item.split(":")[1]);
+            String id = item.split(":")[0];
 
-            result.add(instance.getItemManager().getItem(id, level));
+            result.add(instance.getItemManager().getItem(id));
         }
 
         return result;
@@ -91,7 +90,7 @@ public class BagManager {
         List<String> result = new ArrayList<>();
 
         for (ItemData item : items)
-            result.add(item.getId() + ":" + item.getLevel());
+            result.add(item.getId());
 
         return result;
     }
@@ -158,20 +157,20 @@ public class BagManager {
                 if (itemData == null)
                     return;
 
+                UnEquipTalismanEvent unEquipTalismanEvent = new UnEquipTalismanEvent(player, itemData);
+
+                instance.callEvent(unEquipTalismanEvent);
+
                 removeItem(player, itemData);
                 instance.getGuiManager().updateGUI(player);
 
                 itemData.giveItemResult(player);
 
-                Message.sendMessage(player, Message.prefix() + Placeholder.replacePlaceholders(PathManager.BAG_UNEQUIP, itemData.getName()));
-
-                UnEquipTalismanEvent unEquipTalismanEvent = new UnEquipTalismanEvent(player, itemData, TalismanInventoryType.BAG);
-
-                instance.callEvent(unEquipTalismanEvent);
+                Message.sendMessage(player, Message.prefix() + " " + Placeholder.replacePlaceholders(PathManager.BAG_UNEQUIP, itemData.getName()));
             }
 
             if (gui.isType(slot, "block-slot")) {
-                Message.sendMessage(player, Message.prefix() + PathManager.BAG_BLOCK_SLOT);
+                Message.sendMessage(player, Message.prefix() + " " + PathManager.BAG_BLOCK_SLOT);
 
                 player.playSound(player, XSound.BLOCK_ANVIL_LAND.parseSound(), 20, 20);
             }
@@ -179,7 +178,7 @@ public class BagManager {
 
         if (slot >= gui.getItemsPutInGUI().size() && slot < gui.getItemsPutInGUI().size() + 36) { // Bottom Inventory
             if (itemManager.getItem(itemPressOn) == null) {
-                Message.sendMessage(player, Message.prefix() + PathManager.BAG_EQUIP_WRONG_ITEM);
+                Message.sendMessage(player, Message.prefix()  + " " + PathManager.BAG_EQUIP_WRONG_ITEM);
 
                 player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 10);
 
@@ -194,7 +193,7 @@ public class BagManager {
 
             itemPressOn.setAmount(itemPressOn.getAmount() - 1);
 
-            EquipTalismanEvent equipTalismanEvent = new EquipTalismanEvent(player, itemData, TalismanInventoryType.BAG);
+            EquipTalismanEvent equipTalismanEvent = new EquipTalismanEvent(player, itemData);
 
             instance.callEvent(equipTalismanEvent);
         }

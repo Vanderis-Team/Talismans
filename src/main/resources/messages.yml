@@ -3,19 +3,20 @@ prefix: # 16 means server version 1.16 which supports hex color
   16down: "&8[&5Talismans&8]"
 
 command:
+  create:
+    success: "&aTalismans with ID: &e<item-name> &ahave been successfully created!"
+    already-exists: "&cAlready exists that ID, please choose another ID!"
   status:
     message:
       - ""
       - "&aActivated Talismans: "
-      - "<item-list>"
-      - ""
-      - "&7&oDuplicate talismans will not stack stats."
+      - "<talismans-list>"
     none-found: "&cNone" # Player has none talismans.
 
 bag:
-  equip-wrong-item: "&cThat item is not a talisman."
+  equip-wrong-item: "&cThat item is not a talismans."
   unequip-item: "&aYou just remove <item-name> &aout of your bag!"
   block-slot: "&cThis slot is blocked, please purchase new slot to open!"
 
 crafting:
-  success-craft-item: "&aYou just successfully crafted <item-name> &a!"
+  success: "&aYou just successfully crafted <item-name> &a!"

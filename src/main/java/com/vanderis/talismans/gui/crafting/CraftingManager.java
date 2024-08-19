@@ -47,7 +47,7 @@ public class CraftingManager {
 
                     gui.result = null;
 
-                    Message.sendMessage(player, Message.prefix() + Placeholder.replacePlaceholders(PathManager.BAG_UNEQUIP, result.getName()));
+                    Message.sendMessage(player, Message.prefix()  + " " + Placeholder.replacePlaceholders(PathManager.CRAFTING_SUCCESS, result.getName()));
 
                     gui.getInventory().clear();
                     gui.updateInventory();

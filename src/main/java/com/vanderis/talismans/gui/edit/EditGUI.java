@@ -4,15 +4,16 @@ import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.gui.*;
 import com.vanderis.talismans.items.ItemData;
 import com.vanderis.talismans.utils.*;
-import lombok.Getter;
+import lombok.*;
 import org.bukkit.entity.*;
 
 @Getter
+@Setter
 public class EditGUI extends GUIHolder {
 
     private final Talismans instance = Talismans.getInstance();
 
-    private final ItemData itemData;
+    protected ItemData itemData;
 
     public EditGUI(ItemData itemData) {
         super(Talismans.getInstance().getFileManager().editGUI);
@@ -24,7 +25,7 @@ public class EditGUI extends GUIHolder {
     public void openInventory(Player player) {
         super.openInventory(player);
 
-        player.getOpenInventory().setTitle(Placeholder.replacePlaceholders(Color.color(fileConfiguration.getString("title")), itemData.getId().toString(), itemData.getLevel().toString()));
+        player.getOpenInventory().setTitle(Placeholder.replacePlaceholders(Color.color(fileConfiguration.getString("title")), itemData.getId()));
     }
 
     @Override

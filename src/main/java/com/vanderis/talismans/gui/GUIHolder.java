@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 @Getter
 public abstract class GUIHolder implements InventoryHolder {
 
-    protected final FileConfiguration fileConfiguration;
-    protected final List<GUIItem> items;
-    protected final List<GUIItem> itemsPutInGUI;
+    protected FileConfiguration fileConfiguration;
+    protected List<GUIItem> items;
+    protected List<GUIItem> itemsPutInGUI;
     protected Player viewer;
     protected Inventory inventory;
 
@@ -26,6 +26,10 @@ public abstract class GUIHolder implements InventoryHolder {
     public GUIHolder(FileConfiguration fileConfiguration) {
         this.fileConfiguration = fileConfiguration;
 
+        init();
+    }
+
+    protected void init() {
         String title = Color.color(fileConfiguration.getString("title"));
         int rowSize = Math.min(fileConfiguration.getStringList("format").size(), 6);
 

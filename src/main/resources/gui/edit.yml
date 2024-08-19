@@ -1,10 +1,10 @@
-title: "&c&lTalismans Edit | &8<talismans-id> <talismans-level>"
+title: "&c&lTalismans Edit &8| &8<talismans-id>"
 
 format:
   - "aaaddddda"
-  - "bbbdfffda"
-  - "bcbdfffdg"
-  - "bbbdfffda"
+  - "hbbdfffda"
+  - "icbdfffdg"
+  - "jbbdfffda"
   - "aaaddddda"
 
 items:
@@ -42,3 +42,24 @@ items:
     lore:
       - ""
       - "&7Click here to save and close your edit."
+  h:
+    type: edit-name
+    material: "YELLOW_STAINED_GLASS_PANE"
+    name: "&e&lEdit Item Name"
+    lore:
+      - ""
+      - "&7Click here to edit the item name."
+  i:
+    type: edit-lore
+    material: "LIGHT_BLUE_STAINED_GLASS_PANE"
+    name: "&b&lEdit Item Lore"
+    lore:
+      - ""
+      - "&7Click here to edit the item lore."
+  j:
+    type: edit-effect
+    material: "RED_STAINED_GLASS_PANE"
+    name: "&c&lEdit Item Effects"
+    lore:
+      - ""
+      - "&7Click here to edit item effects."

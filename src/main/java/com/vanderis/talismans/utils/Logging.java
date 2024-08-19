@@ -12,15 +12,15 @@ public class Logging {
 
     public void debug(String title, String message) {
         if (debug)
-            Bukkit.getLogger().log(Level.INFO, Color.color("[Talismans-DEBUG] <" + title + "> " + message));
+            Bukkit.getConsoleSender().sendMessage(Color.color("&8[&5Talismans&8-&aDEBUG&8] &8<&e" + title + "&8> &f" + message));
     }
 
     public void log(String message) {
-        Bukkit.getLogger().log(Level.INFO, Color.color("[Talismans] " + message));
+        Bukkit.getConsoleSender().sendMessage(Color.color("&8[&5Talismans&8-&fLOG&8] &f" + message));
     }
 
     public void warn(String message) {
-        Bukkit.getLogger().log(Level.WARNING, Color.color("[Talismans] " + message));
+        Bukkit.getConsoleSender().sendMessage(Color.color("&8[&5Talismans&8-&eWARN&8] &f" + message));
     }
 
 }

@@ -5,6 +5,7 @@ import com.vanderis.talismans.gui.bag.BagGUI;
 import com.vanderis.talismans.gui.bag.BagManager;
 import com.vanderis.talismans.items.*;
 import com.vanderis.talismans.utils.Message;
+import me.orineko.pluginspigottools.MethodDefault;
 import my.plugin.utils.XSound;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,8 +26,10 @@ public class GUIManager {
     }
 
     public void openGUI(Player player, GUIHolder holder) {
-        holder.openInventory(player);
-        holder.updateInventory();
+        Bukkit.getScheduler().runTask(Talismans.getInstance(), () -> {
+            holder.openInventory(player);
+            holder.updateInventory();
+        });
 
         cacheGUI.put(player, holder);
     }

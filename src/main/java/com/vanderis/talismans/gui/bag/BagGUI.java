@@ -67,9 +67,6 @@ public class BagGUI extends GUIHolder {
             }
         }
 
-        // TODO: Add lore when has same talismans in bag
-        // TODO: Add lore when higher talisman in bag
-
         return true;
     }
 

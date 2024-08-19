@@ -1,9 +1,6 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.items.talismans.FlameRelic;
-import com.vanderis.talismans.utils.Logging;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
@@ -23,13 +20,13 @@ public class ItemManager {
 
     public void removeItemFromCache(ItemData itemData) {
         itemList = itemList.stream()
-                .filter(cache -> cache.getId().equals(itemData.getId()) && cache.getLevel().equals(itemData.level)).toList();
+                .filter(cache -> cache.getId().equals(itemData.getId())).toList();
     }
 
     @Nullable
-    public ItemData getItem(ItemName id, Integer level) {
+    public ItemData getItem(String id) {
         return itemList.stream()
-                .filter(itemData -> itemData.getId().equals(id) && itemData.getLevel().equals(level))
+                .filter(itemData -> itemData.getId().equals(id))
                 .findAny().orElse(null);
     }
 

@@ -1,4 +1,4 @@
-title: "&5&lTalismans Collections &8| &8Page <current-page>/<max-page>"
+title: "&c&lEdit Effects &8| &8<talismans-id> &8| &8Page <current-page>/<max-page>"
 
 format:
   - "aaaaaaaaa"
@@ -6,7 +6,7 @@ format:
   - "aaaaaaaaa"
   - "aaaaaaaaa"
   - "aaaaaaaaa"
-  - "bbbdbcbbb"
+  - "bbbdecbbb"
 
 items:
   a:
@@ -30,3 +30,10 @@ items:
     lore:
       - ""
       - "&7Click here to go to previous page."
+  e:
+    type: close
+    material: "LIME_WOOL"
+    name: "&a&lSave & Close"
+    lore:
+      - ""
+      - "&7Click here to save and close your edit."

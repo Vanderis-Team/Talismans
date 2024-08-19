@@ -1,5 +1,7 @@
 package com.vanderis.talismans.player;
 
+import com.vanderis.talismans.Talismans;
+import com.vanderis.talismans.events.equip.EquipTalismanEvent;
 import com.vanderis.talismans.files.PathManager;
 import com.vanderis.talismans.items.ItemData;
 import lombok.*;
@@ -27,12 +29,16 @@ public class PlayerData {
     public PlayerData(List<ItemData> bagItems) {
         this.bagSize = PathManager.DEFAULT_BAG_SIZE;
         this.bagItems = bagItems;
+
+        castEquipEvent(bagItems);
     }
 
     public PlayerData(Player player, Integer bagSize, List<ItemData> bagItems) {
         this.player = player;
         this.bagSize = bagSize;
         this.bagItems = bagItems;
+
+        castEquipEvent(bagItems);
     }
 
     public List<ItemData> getAllItems() {
@@ -40,7 +46,7 @@ public class PlayerData {
     }
 
     public List<String> getAllItemsName() {
-        List<ItemData> items = new ArrayList<>(new HashSet<>(getAllItems()));
+        List<ItemData> items = getAllItems();
 
         if (items.isEmpty())
             return new ArrayList<>();
@@ -76,6 +82,14 @@ public class PlayerData {
 
     public Boolean hasItem(ItemData itemData) {
         return bagItems.contains(itemData);
+    }
+
+    private void castEquipEvent(List<ItemData> equippedItems) {
+        for (ItemData itemData : equippedItems) {
+            EquipTalismanEvent equipTalismanEvent = new EquipTalismanEvent(player, itemData, true);
+
+            Talismans.getInstance().callEvent(equipTalismanEvent);
+        }
     }
 
 }

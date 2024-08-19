@@ -55,7 +55,7 @@ public class CollectionsManager {
 
                     if (itemData.getItemResult() == null) {
                         Message.sendMessage(player, Message.prefix() + " " + itemData.getName() + " &chas no item stand for it!");
-                        Message.sendMessage(player, Message.prefix() + " &fPlease do &e/talismans edit " + itemData.getId() + " " + itemData.getLevel() + " &fto edit the talisman.");
+                        Message.sendMessage(player, Message.prefix() + " &fPlease do &e/talismans edit " + itemData.getId() + " &fto edit the talismans.");
 
                         player.playSound(player, XSound.ENTITY_VILLAGER_NO.parseSound(), 20, 1);
 

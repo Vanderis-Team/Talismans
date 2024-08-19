@@ -11,6 +11,8 @@ public class CloseEvent implements Listener {
     @EventHandler
     public void onCloseInventory(InventoryCloseEvent event) {
         instance.getEditManager().onEditClose(event);
+        instance.getEditLoreManager().onEditClose(event);
+        instance.getEditEffectManager().onEditClose(event);
         instance.getCraftingManager().onCraftingClose(event);
 
         instance.getGuiManager().closeInventory(event);

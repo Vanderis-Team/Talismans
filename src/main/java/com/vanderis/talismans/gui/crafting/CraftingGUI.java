@@ -3,9 +3,6 @@ package com.vanderis.talismans.gui.crafting;
 import com.vanderis.talismans.Talismans;
 import com.vanderis.talismans.gui.GUIHolder;
 import com.vanderis.talismans.items.ItemData;
-import com.vanderis.talismans.utils.Logging;
-import lombok.Getter;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

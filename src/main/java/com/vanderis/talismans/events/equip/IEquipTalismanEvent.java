@@ -16,19 +16,21 @@ public abstract class IEquipTalismanEvent extends Event {
 
     protected Player player;
 
-    @Setter
-    protected ItemData equipTalisman;
-    protected TalismanInventoryType talismanInventoryType;
+    protected Boolean isJoinEquip; // When player join, this event will run for every talisman player have
 
-    public IEquipTalismanEvent(Player player, ItemData equipTalisman, TalismanInventoryType talismanInventoryType) {
+    @Setter
+    protected ItemData equipTalisman; // Use as equip and unequip talismans
+
+    public IEquipTalismanEvent(Player player, ItemData equipTalisman, Boolean isJoinEquip) {
         this.player = player;
         this.equipTalisman = equipTalisman;
-        this.talismanInventoryType = talismanInventoryType;
+        this.isJoinEquip = isJoinEquip;
     }
 
-    public IEquipTalismanEvent(Player player, TalismanInventoryType talismanInventoryType) {
+    public IEquipTalismanEvent(Player player, ItemData equipTalisman) {
         this.player = player;
-        this.talismanInventoryType = talismanInventoryType;
+        this.equipTalisman = equipTalisman;
+        this.isJoinEquip = false;
     }
 
     @Override

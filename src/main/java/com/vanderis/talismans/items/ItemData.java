@@ -1,9 +1,8 @@
 package com.vanderis.talismans.items;
 
 import com.vanderis.talismans.Talismans;
-import com.vanderis.talismans.events.effect.TalismanEffectEvent;
+import com.vanderis.talismans.utils.*;
 import com.vanderis.talismans.utils.Color;
-import com.vanderis.talismans.utils.Logging;
 import lombok.*;
 import me.orineko.pluginspigottools.FileManager;
 import org.bukkit.*;
@@ -17,44 +16,71 @@ import java.util.*;
 
 @Setter
 @Getter
-public abstract class ItemData implements Listener {
+public class ItemData implements Listener {
 
-    protected ItemName id;
-    protected Integer level;
+    protected String id;
 
     protected FileManager fileManager;
     protected ItemStack itemResult;
     protected boolean craftable;
     protected List<ItemStack> recipe;
-    protected Map<String, String> values = new HashMap<>();
+    protected Map<String, String> effectValues = new HashMap<>();
 
-    public ItemData(ItemName id, Integer level) {
+    public ItemData(String id) {
         this.id = id;
-        this.level = level;
 
         renewItemToCache();
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, Talismans.getInstance());
     }
 
     public String getName() {
         return itemResult == null ?
-                Color.color("&e" + id + ":" + level) : Color.color(itemResult.getItemMeta().getDisplayName().matches("\\s*") ?
-                Color.color("&e" + id + ":" + level) : itemResult.getItemMeta().getDisplayName());
+                Color.color("&e" + id) : Color.color(itemResult.getItemMeta().getDisplayName().matches("\\s*") ?
+                Color.color("&e" + id) : itemResult.getItemMeta().getDisplayName());
     }
 
-    public Integer getValueAsInt(String key) {
-        return Integer.parseInt(values.get(key));
-    }
-
-    public void getValueFile(FileConfiguration fileConfiguration) {
-        ConfigurationSection configSec = fileConfiguration.getConfigurationSection("values");
+    public void getEffectValuesFromFile(FileConfiguration fileConfiguration) {
+        ConfigurationSection configSec = fileConfiguration.getConfigurationSection("effects-values");
 
         if (configSec != null)
             configSec.getKeys(false).forEach(key -> {
-                values.put(key, configSec.getString(key));
+                effectValues.put(key, configSec.getString(key));
             });
 
+    }
+
+    public String getEffectValue(String effectID) {
+        return getEffectValues().get(effectID);
+    }
+
+    public Double getNumberFromEffectValue(String effectID) {
+        String effectValue = getEffectValue(effectID);
+
+        if (effectValue.contains("%")) {
+            try {
+                return Double.parseDouble(effectValue.split("%")[0]);
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+        }
+
+        if (effectValue.contains("x")) {
+            try {
+
+                return Double.parseDouble(effectValue.split("x")[0]);
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+        }
+
+        try {
+            return Double.parseDouble(effectValue);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
+    }
+
+    public void setEffectValue(String effectID, String effectValue) {
+        effectValues.put(effectID, effectValue);
     }
 
     public void giveItemResult(Player player) {
@@ -78,10 +104,6 @@ public abstract class ItemData implements Listener {
         return valid;
     }
 
-    public Boolean hasItemData(Player player) {
-        return Talismans.getInstance().getPlayerManager().getPlayerData(player).hasItem(this);
-    }
-
     public void saveToFile() {
         fileManager.set("item-result", itemResult);
         fileManager.set("craftable", craftable);
@@ -89,7 +111,7 @@ public abstract class ItemData implements Listener {
         for (int i = 1; i <= recipe.size(); i++)
             fileManager.set("recipe." + i, recipe.get(i - 1));
 
-        fileManager.set("values", values);
+        fileManager.set("effects-values", effectValues);
 
         fileManager.save();
 
@@ -97,8 +119,8 @@ public abstract class ItemData implements Listener {
     }
 
     private void renewItemToCache() {
-        fileManager = new FileManager(level + ".yml", Talismans.getInstance());
-        fileManager.createFolder("talismans", id.name().toLowerCase());
+        fileManager = new FileManager(id + ".yml", Talismans.getInstance());
+        fileManager.createFolder("talismans");
         fileManager.createFile();
 
         this.itemResult = fileManager.getItemStack("item-result");
@@ -109,19 +131,11 @@ public abstract class ItemData implements Listener {
         for (int i = 1; i <= 9; i++)
             recipe.add(fileManager.getItemStack("recipe." + i));
 
-        getValueFile(fileManager);
-    }
-
-    public TalismanEffectEvent callEvent(Player player) {
-        TalismanEffectEvent talismanEffectEvent = new TalismanEffectEvent(player, this);
-
-        Talismans.getInstance().callEvent(talismanEffectEvent);
-
-        return talismanEffectEvent;
+        getEffectValuesFromFile(fileManager);
     }
 
     public String toString() {
-        return id.name() + ":" + level + ":" + itemResult;
+        return id + ":" + itemResult;
     }
 
 }
