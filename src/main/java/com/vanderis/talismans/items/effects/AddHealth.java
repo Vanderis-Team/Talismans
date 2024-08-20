@@ -42,12 +42,15 @@ public class AddHealth extends EffectData {
         ItemData itemData = event.getEquipTalisman();
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(Talismans.getInstance(), () -> {
-            if (itemHasEffect(itemData, "add-health"))
+            if (itemHasEffect(itemData, "add-health")) {
+                Logging.log("unequip");
+
                 if (hasAttribute(player, Attribute.GENERIC_MAX_HEALTH, itemData, "add-health")) {
                     removeAttribute(player, Attribute.GENERIC_MAX_HEALTH, itemData, "add-health");
 
                     Logging.debug("AddHealth Effect (UnEquip)", player.getName() + " | " + itemData.getName() + " | " + getNewValueAfterAddEffect(effectID, itemData, 0.0, false));
                 }
+            }
         }, 1L);
 
 

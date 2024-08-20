@@ -1,0 +1,19 @@
+craftable: true
+effects-values:
+  add-damage: '0.0'
+  reduce-overall-damage: '0.0'
+  health-regen: '2.0'
+  add-health: '0.0'
+  reduce-fire-damage: '0.0'
+  reduce-fall-damage: '0.0'
+item-result:
+  ==: org.bukkit.inventory.ItemStack
+  v: 3839
+  type: APPLE
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: '{"text":"","extra":[{"text":"Regen Plus","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"red","bold":true}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Increase heart when regen by ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false},{"text":"2
+      heart","italic":false,"color":"red"}]}'

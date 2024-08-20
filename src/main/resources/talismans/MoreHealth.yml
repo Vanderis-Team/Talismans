@@ -1,0 +1,19 @@
+craftable: true
+effects-values:
+  add-damage: '0.0'
+  reduce-overall-damage: '0.0'
+  health-regen: '0.0'
+  add-health: '10.0'
+  reduce-fire-damage: '0.0'
+  reduce-fall-damage: '0.0'
+item-result:
+  ==: org.bukkit.inventory.ItemStack
+  v: 3839
+  type: GOLDEN_APPLE
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: '{"text":"","extra":[{"text":"More Health","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"red","bold":true}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Add ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false},{"text":"10
+      health","italic":false,"color":"red"}]}'

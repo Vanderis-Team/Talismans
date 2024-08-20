@@ -32,12 +32,12 @@ public class FileManager {
         config = new me.orineko.pluginspigottools.FileManager("config.yml", instance).copyDefault();
         messages = new me.orineko.pluginspigottools.FileManager("messages.yml", instance).copyDefault();
 
-        collectionsGUI = new me.orineko.pluginspigottools.FileManager("gui/collections.yml", instance).copyDefault();
-        bagGUI = new me.orineko.pluginspigottools.FileManager("gui/bag.yml", instance).copyDefault();
-        editGUI = new me.orineko.pluginspigottools.FileManager("gui/edit.yml", instance).copyDefault();
-        editLoreGUI = new me.orineko.pluginspigottools.FileManager("gui/edit-lore.yml", instance).copyDefault();
-        editEffectGUI = new me.orineko.pluginspigottools.FileManager("gui/edit-effect.yml", instance).copyDefault();
-        craftingGUI = new me.orineko.pluginspigottools.FileManager("gui/crafting.yml", instance).copyDefault();
+        collectionsGUI = new me.orineko.pluginspigottools.FileManager("gui\\collections.yml", instance).copyDefault();
+        bagGUI = new me.orineko.pluginspigottools.FileManager("gui\\bag.yml", instance).copyDefault();
+        editGUI = new me.orineko.pluginspigottools.FileManager("gui\\edit.yml", instance).copyDefault();
+        editLoreGUI = new me.orineko.pluginspigottools.FileManager("gui\\edit-lore.yml", instance).copyDefault();
+        editEffectGUI = new me.orineko.pluginspigottools.FileManager("gui\\edit-effect.yml", instance).copyDefault();
+        craftingGUI = new me.orineko.pluginspigottools.FileManager("gui\\crafting.yml", instance).copyDefault();
     }
 
     @SneakyThrows
@@ -66,7 +66,7 @@ public class FileManager {
         for (String talismanPath : source) {
             new me.orineko.pluginspigottools.FileManager("talismans\\" + talismanPath, instance).copyDefault();
 
-            String id = talismanPath.split("/")[0];
+            String id = talismanPath.split("\\\\")[0].replace(".yml", "");
 
             load(new ItemData(id));
         }
@@ -219,7 +219,11 @@ public class FileManager {
                 String name = e.getName();
 
                 if (name.startsWith(folderName)) {
+                    Logging.log("folder name: " + folderName);
+
                     String resultName = name.replace(folderName + "/", "");
+
+                    Logging.log("result name: " + resultName);
 
                     if (resultName.contains(".yml"))
                         temporaryFiles.add(resultName);

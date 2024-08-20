@@ -86,15 +86,15 @@ public abstract class EffectData implements Listener {
     }
 
     protected void addAttribute(Player player, Attribute attribute, ItemData itemData, String effectID) {
-        player.getAttribute(attribute).addModifier(new AttributeModifier(itemData.getId(), getNewValueAfterAddEffect(effectID, itemData, 0.0, false), AttributeModifier.Operation.ADD_NUMBER));
+        player.getAttribute(attribute).addModifier(new AttributeModifier(UUID.nameUUIDFromBytes(itemData.getId().getBytes()), itemData.getId(), getNewValueAfterAddEffect(effectID, itemData, 0.0, false), AttributeModifier.Operation.ADD_NUMBER));
     }
 
     protected boolean hasAttribute(Player player, Attribute attribute, ItemData itemData, String effectID) {
-        return player.getAttribute(attribute).getModifiers().contains(new AttributeModifier(itemData.getId(), getNewValueAfterAddEffect(effectID, itemData, 0.0, false), AttributeModifier.Operation.ADD_NUMBER));
+        return player.getAttribute(attribute).getModifiers().contains(new AttributeModifier(UUID.nameUUIDFromBytes(itemData.getId().getBytes()), itemData.getId(), getNewValueAfterAddEffect(effectID, itemData, 0.0, false), AttributeModifier.Operation.ADD_NUMBER));
     }
 
     protected void removeAttribute(Player player, Attribute attribute, ItemData itemData, String effectID) {
-        player.getAttribute(attribute).removeModifier(new AttributeModifier(itemData.getId(), getNewValueAfterAddEffect(effectID, itemData, 0.0, false), AttributeModifier.Operation.ADD_NUMBER));
+        player.getAttribute(attribute).removeModifier(new AttributeModifier(UUID.nameUUIDFromBytes(itemData.getId().getBytes()), itemData.getId(), getNewValueAfterAddEffect(effectID, itemData, 0.0, false), AttributeModifier.Operation.ADD_NUMBER));
     }
 
 }
